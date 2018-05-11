@@ -37,7 +37,8 @@ function mainPage(data)
     var y = d3.scaleLinear().range([height, 0]);
 
     /***** SET DOMAINS ********/
-    x.domain(d3.extent(data, function(d) { return d.X }));
+    //x.domain(d3.extent(data, function(d) { return d.X }));
+    x.domain([0, d3.max(data, function(d) { return d.X; })]);
 	y.domain([0, d3.max(data, function(d) { return d.Y; })]);
 
     /***** CREATE THE BODY ********/
@@ -55,8 +56,12 @@ function mainPage(data)
 **************************************************************************************************/
 
 	/****** GLOBAL CONSTANTS *********/
-	const OPENING_TIME_FRIDAY = new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T07:10:52.000Z
-	
+	const OPENING_TIME_FRIDAY = new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T08:00:00.000Z
+	const CLOSING_TIME_FRIDAY = new Date('2014-06-06T21:59:59.000Z'); //2014-06-06T23:59:59.000Z
+
+	console.log(OPENING_TIME_FRIDAY.getTime());
+	console.log(CLOSING_TIME_FRIDAY.getTime());
+
 
 	/****** FOR STATISTICS *********/
 	var numberOfCheckIns = 0;
@@ -64,21 +69,31 @@ function mainPage(data)
     var afterNine = 0;
 
 	/***** COLOR ARRAYS FOR PLOT ******/
-    var color = d3.scaleOrdinal(["#ede0e8", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"]);
-	var color2 = d3.scaleOrdinal(["#eddad1", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]);
-	var color3 = d3.scaleOrdinal(["#dce7ea", "#b3cde3", "#8c96c6", "#8856a7", "#810f7c"]);
-	var color4 = d3.scaleOrdinal(["#e0e8d7", "#bae4bc", "#7bccc4", "#43a2ca", "#0868ac"]);
+
 	
-	var color5 = d3.scaleOrdinal(["#e5dee6", "#bdc9e1", "#67a9cf", "#1c9099", "#016c59"]);
-	var color6 = d3.scaleOrdinal(["#eeeec3", "#fed98e", "#fe9929", "#d95f0e", "#993404"]);
+	var color = d3.scaleLinear().domain(1402034400000,1402091999000).range("#ede0e8", "#b30000");
+	var color2 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#eddad1", "#7a0177");//d3.scaleLinear();
+	var color3 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#dce7ea", "#810f7c");d3.scaleLinear();
+	var color4 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#e0e8d7", "#0868ac");d3.scaleLinear("#e0e8d7", "#0868ac");
+	var color5 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#e5dee6", "#016c59");d3.scaleLinear();
+	var color6 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#eeeec3", "#993404");d3.scaleLinear();
+	//var color = d3.scaleLinear("#ede0e8", "#b30000");
+
+ //    var color = d3.scaleOrdinal(["#ede0e8", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"]);
+	// var color2 = d3.scaleOrdinal(["#eddad1", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]);
+	// var color3 = d3.scaleOrdinal(["#dce7ea", "#b3cde3", "#8c96c6", "#8856a7", "#810f7c"]);
+	// var color4 = d3.scaleOrdinal(["#e0e8d7", "#bae4bc", "#7bccc4", "#43a2ca", "#0868ac"]);
 	
-	var colors = d3.scaleOrdinal(["#ede0e8", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000",
-								  "#eddad1", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177",
-								  "#dce7ea", "#b3cde3", "#8c96c6", "#8856a7", "#810f7c",
-								  "#e0e8d7", "#bae4bc", "#7bccc4", "#43a2ca", "#0868ac",
-								  "#e5dee6", "#bdc9e1", "#67a9cf", "#1c9099", "#016c59",
-								  "#eeeec3", "#fed98e", "#fe9929", "#d95f0e", "#993404"
-								 ]);
+	// var color5 = d3.scaleOrdinal(["#e5dee6", "#bdc9e1", "#67a9cf", "#1c9099", "#016c59"]);
+	// var color6 = d3.scaleOrdinal(["#eeeec3", "#fed98e", "#fe9929", "#d95f0e", "#993404"]);
+	
+	// var colors = d3.scaleOrdinal(["#ede0e8", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000",
+	// 							  "#eddad1", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177",
+	// 							  "#dce7ea", "#b3cde3", "#8c96c6", "#8856a7", "#810f7c",
+	// 							  "#e0e8d7", "#bae4bc", "#7bccc4", "#43a2ca", "#0868ac",
+	// 							  "#e5dee6", "#bdc9e1", "#67a9cf", "#1c9099", "#016c59",
+	// 							  "#eeeec3", "#fed98e", "#fe9929", "#d95f0e", "#993404"
+	// 							 ]);
 	//console.log("Colors: " + colorMatrix);
     
     /***** PARSE TIME DATA ******/
@@ -95,7 +110,7 @@ function mainPage(data)
 	
 	var actionType = "check-in"; //what action are we searching for?
 	var someDate = new Date('2014-06-06T06:52:00.000Z'); //09:04 - what time are we looking
-	let xCoordList = [0, 87] ,  yCoordList = [67, 81]; //coordinates
+	let xCoordList = [0, 87, 43] ,  yCoordList = [67, 81, 78]; //coordinates
 	var _queryType = "timeSpent"; //what statistics are we looking for?
 
     // lista med random ids från datan
@@ -145,11 +160,10 @@ function mainPage(data)
 	
 	/******* TRYING TO SORT SHIT **********/
 
-	console.log("x: "+ xCoordList + " y: " + yCoordList);
+	console.log(xCoordList);
+	console.log(yCoordList);
 
 	let newData = findGroup(data, xCoordList, yCoordList, someDate, actionType);
-	console.log("Data from main:");
-	console.log(newData);
 	
 	searchingTime = performance.now() - searchStartTime;
 	console.log("Searched in " + searchingTime + " milliseconds.");
@@ -164,8 +178,7 @@ function mainPage(data)
     /****** DRAW SCATTERPLOT ******/
 	updatePlot(newData);
 
-
- // Add the X Axis
+ 	// Add the X Axis
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
@@ -196,7 +209,7 @@ function mainPage(data)
 			//.data(data.filter(checkId, list) )
 			.enter().append("circle")
 			.attr("r", function(d){
-				if(d.type == "check-in") return 5; 
+				if(d.type == "check-in") return 6; 
 				return 2; 
 			})
 			.attr("cx", function(d){return x(d.X)})
@@ -205,13 +218,11 @@ function mainPage(data)
 				
 				if( d.type == "check-in"){
 					//numberOfCheckIns++;
-					//console.log("Check-in at (" + d.X + ", " + d.Y + ")." );
+					console.log("Check-in at (" + d.X + ", " + d.Y + ")." );
 					return "red";
 				}
 				else {
 					let hour = d["Timestamp"] - OPENING_TIME_FRIDAY;
-
-					//console.log(d["Timestamp"]);
 
 					if( d["id"] == idsInGroup[0] ){
 						return color(Math.floor(hour/900000)-1);
@@ -303,14 +314,12 @@ function mainPage(data)
 	function findGroup(theData,  xCoords,  yCoords, time, type) //skicka in vilken typeof value vi letar efter? 
 	{
 		var newData = [];
-		let idxList = [];
 
 		//Find the ids at point 
 		theData.forEach( function(dataPoint) 
 		{
 			if( checkCoordinates(dataPoint, xCoords[0], yCoords[0], time, type) ){
-					newData.push(dataPoint);
-					
+					newData.push(dataPoint);		
 			}
 		})
 
@@ -327,7 +336,7 @@ function mainPage(data)
 		else{
 			console.log("Recursive call");
 			
-			newData = findGroupAgain(newData, xCoords.slice(1), yCoords.slice(1))
+			newData = findGroupAgain(newData, xCoords.slice(1), yCoords.slice(1));
 			
 			return newData;	
 		}
@@ -344,13 +353,13 @@ function mainPage(data)
 			if( checkPosition(dataPoint["X"], xCoords[0]) 
 				&& checkPosition(dataPoint["Y"], yCoords[0]) ){
 					newData.push(dataPoint);
-					console.log("pushing!");
+				console.log("Pushing!");
 			}
 		})
 
 		//find all actions of an Id
 		newData = theData.filter(checkId, newData);
-		console.log(newData);
+		//console.log(newData);
 
 		//if last coords: return
 		if( xCoords.length == 1){
@@ -363,12 +372,11 @@ function mainPage(data)
 			console.log("Recursive call second level.")
 			
 			//recursive call
-			newData = findGroup(newData, xCoords.slice(1), yCoords.slice(1));
+			newData = findGroupAgain(newData, xCoords.slice(1), yCoords.slice(1));
 			
 			return newData;
 		}
 	}
-
 
 	function retrieveIds(theList) {
 		listOfIds = [];
@@ -379,6 +387,14 @@ function mainPage(data)
 
 		return listOfIds;
 	}
+
+/****
+*
+*
+*				DELETE? Eller vänta och se om vi har användning för den?
+*
+***/
+
 
 	function pruneData(list, xCoordList, yCoordList){
 		var newList = list;
