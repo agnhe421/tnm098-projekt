@@ -6,12 +6,13 @@
 *								 VARIABLES' DECLARATIONS
 *
 **************************************************************************************************/
-
+/****** GLOBAL CONSTANTS *********/
 ///people need to be within this time to be able to qualify as group
 const MINUTE_IN_THRESHOLD = 2;
 //convert to milliseconds
 const TIME_THRESHOLD =  MINUTE_IN_THRESHOLD * 60000; 
 const STARTING_TIME = performance.now();
+const OPENING_TIME_FRIDAY = new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T07:10:52.000Z
 var hourParser = d3.timeParse("%Y-%m-%d %H:%M:%S");
 /**************************************************************************************************
 *
@@ -123,27 +124,27 @@ function mainPage(data)
 **************************************************************************************************/
 
 	/***** SORT DATA BY ID ******/
-	console.log("Sorting..."); //before
-	let sortStartTime = performance.now();
-	
-	data.sort(function(a,b){
-		return (a["id"] - b["id"]); 
-	});
-	
-	let sortingTime = performance.now() - sortStartTime;
-	console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
+	// console.log("Sorting..."); //before
+	// let sortStartTime = performance.now();
+    //
+	// data.sort(function(a,b){
+	// 	return (a["id"] - b["id"]);
+	// });
+    //
+	// let sortingTime = performance.now() - sortStartTime;
+	// console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
+    //
+	// /***** FORMAT THE DATA ******/
+	// let parseStartTime = performance.now();
+    //
+    // data.forEach(function(d) {
+     //    d.Timestamp = hourParser(d.Timestamp);
+     //    //d.Y = +d.Y;
+    // });
+    //
+    // let parsingTime = performance.now() - parseStartTime;
+	// console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
 
-	/***** FORMAT THE DATA ******/
-	let parseStartTime = performance.now();
-    
-    data.forEach(function(d) {
-        d.Timestamp = hourParser(d.Timestamp);
-        //d.Y = +d.Y;
-    });
-    
-    let parsingTime = performance.now() - parseStartTime;
-	console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
-   
 	/***** SET QUERY REQUIREMENTS ******/
 
 	
@@ -154,7 +155,18 @@ function mainPage(data)
 	};
 	
 	/***** FIND GROUPD ******/
-	
+
+	// //function(typeOf, theData, x, y, time, type)
+	// console.log("Looking for group..."); //after
+	// let searchStartTime = performance.now();
+	//
+	// idsInGroup = getIds(data, xCoord, yCoord, someDate, actionType);
+	//
+	// searchingTime = performance.now() - searchStartTime;
+	// console.log("Searched in " + searchingTime + " milliseconds.");
+	// //idsInGroup = getIds(queryType, data,xCoord, yCoord, someDate, actionType);
+	// dataSubset = data.filter(checkId, idsInGroup);
+
 	console.log("Looking for group..."); //after
 	let searchStartTime = performance.now();
 	
@@ -167,8 +179,6 @@ function mainPage(data)
 	
 	searchingTime = performance.now() - searchStartTime;
 	console.log("Searched in " + searchingTime + " milliseconds.");
-
-	
 /**************************************************************************************************
 *
 *											DRAW
@@ -176,6 +186,10 @@ function mainPage(data)
 **************************************************************************************************/
    
     /****** DRAW SCATTERPLOT ******/
+
+    handleData(data);
+
+	updatePlot(dataSubset);
 	updatePlot(newData);
 
  	// Add the X Axis
@@ -190,13 +204,59 @@ function mainPage(data)
     console.log("DONE.");
 
 
+    //handle the data
+	function handleData(data)
+	{
+
+        console.log("Sorting..."); //before
+        var sortStartTime = performance.now();
+
+        data.sort(function(a,b){
+            return (a["id"] - b["id"]);
+        });
+
+        var sortingTime = performance.now() - sortStartTime;
+        console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
+		console.log("handled data: ");
+		console.log(data);
+
+        /***** FORMAT THE DATA ******/
+        var parseStartTime = performance.now();
+
+        data.forEach(function(d) {
+            d.Timestamp = hourParser(d.Timestamp);
+            //d.Y = +d.Y;
+        });
+
+        var parsingTime = performance.now() - parseStartTime;
+        console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
+
+
+        /***** FIND GROUPD ******/
+        //function(typeOf, theData, x, y, time, type)
+        console.log("Looking for group..."); //after
+        var searchStartTime = performance.now();
+
+        idsInGroup = findGroup(data, xCoordList, yCoordList, someDate, actionType);
+        searchingTime = performance.now() - searchStartTime;
+        console.log("Searched in " + searchingTime + " milliseconds.");
+        //idsInGroup = getIds(queryType, data,xCoord, yCoord, someDate, actionType);
+        dataSubset = data.filter(checkId, idsInGroup);
+
+      //  console.log("DATA SUBSET from handle data:  ");
+     //   console.log(dataSubset);
+
+        return dataSubset;
+	}
+
+	//Update the plot
+
  /**************************************************************************************************
 *
 *									MEMBER FUNCTIONS
 *
 **************************************************************************************************/
 
-	
 	function updatePlot(data)
 	{
 		console.log("Clearing plot...");
@@ -257,27 +317,27 @@ function mainPage(data)
 	this.loadSat = function()
 	{
 		
-		let startLoad = performance.now();
+		var startLoad = performance.now();
 		
-		let emptyDataSet = [];
+		var emptyDataSet = [];
 		//updatePlot(emptyDataSet);
-		
+
+        var newData = [];
 		console.log("Loading saturday..."); 
 		d3.csv('./data/dataSmallSat.csv', function(data) {
 
-		//data.forEach(function(d) {
-		//d["Timestamp"] =+ hourParser(d["Timestamp"]);
-		//  d["X"] = +d["X"];
-		//	d["Y"] = +d["Y"];
-		// });
-	
-		 console.log(data[5]); 
-		
-	
-		let loadingTime = performance.now() - startLoad;
+		//console.log(handleData(data));
+		newData = handleData(data);
+
+		//console.log("New data: ");
+		//console.log(newData);
+
+		updatePlot(newData);
+
+		var loadingTime = performance.now() - startLoad;
 		console.log("Loaded data of size " +data.length + " in " + loadingTime +" milliseconds." );
 		
-		return data; 
+		//return data;
 		}); 
 			 
 	}	
@@ -394,6 +454,21 @@ function mainPage(data)
 *				DELETE? Eller vänta och se om vi har användning för den?
 *
 ***/
+//
+// function checkCoordinates(theData, x, y, time, type){
+// 	//console.log("Date: " + time);
+// 	//normalize time to current dates
+// 	var openingTime = new Date('2014-06-06T06:00:00.000Z');
+// 	var askedTime = time - openingTime;
+// 	//console.log("Query time: " + askedTime/600000 + "mins from opening time.");
+//
+// 	if( theData["type"] == "check-in"
+// 		&& theData["X"] == x && theData["Y"] == y )
+// 		//&& ( Math.abs(theData["Timestamp"].getTime() - time.getTime())) <= TIME_THRESHOLD ) //Math.floor((theData["Timestamp"]-openingTime)/600000) ==  Math.floor(askedTime/600000))
+// 	{
+// 			//console.log("Time: " + ( Math.abs(theData["Timestamp"].getTime() - time.getTime()) )/60000 + " minutes."); //divide by 60000 to normalize to minutes.
+// 			return true;
+
 
 
 	function pruneData(list, xCoordList, yCoordList){
@@ -422,6 +497,7 @@ function mainPage(data)
 			return newList;
 		// }
 		
+
 	}
 
 
@@ -448,9 +524,9 @@ function mainPage(data)
 		var askedTime = time - openingTime;
 		//console.log("Query time: " + askedTime/600000 + "mins from opening time.");
 		
-		if( /*theData["type"] == "check-in" 
-			&&*/ theData["X"] == x && theData["Y"] == y 
-			&& ( Math.abs(theData["Timestamp"].getTime() - time.getTime())) <= TIME_THRESHOLD ) //Math.floor((theData["Timestamp"]-openingTime)/600000) ==  Math.floor(askedTime/600000))
+		if( theData["type"] == "check-in"
+			&& theData["X"] == x && theData["Y"] == y )
+			//&& ( Math.abs(theData["Timestamp"].getTime() - time.getTime())) <= TIME_THRESHOLD ) //Math.floor((theData["Timestamp"]-openingTime)/600000) ==  Math.floor(askedTime/600000))
 		{
 				//console.log("Time: " + ( Math.abs(theData["Timestamp"].getTime() - time.getTime()) )/60000 + " minutes."); //divide by 60000 to normalize to minutes.
 				return true;
