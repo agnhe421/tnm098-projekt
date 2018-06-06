@@ -118,55 +118,7 @@ function mainPage(data)
 *
 **************************************************************************************************/
 
-	/***** SORT DATA BY ID ******/
 
-	//start timer
-	console.log("Sorting...");
-	let sortStartTime = performance.now();
-
-	//sort data accoring to id
-	data.sort(function(a,b){
-		return (a["id"] - b["id"]);
-	});
-
-	//stop timer
-	let sortingTime = performance.now() - sortStartTime;
-	console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
-
-	/***** FORMAT THE DATA ******/
-
-	//start timer
-	let parseStartTime = performance.now();
-
-	//parse the date for correct time-format
-    data.forEach(function(d) {
-        d.Timestamp = hourParser(d.Timestamp);
-        //d.Y = +d.Y;
-    });
-
-    //stop timer
-    let parsingTime = performance.now() - parseStartTime;
-	console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
-   
-	/***** SET QUERY REQUIREMENTS ******/
-	var query = {
-		'theAction': actionType,
-		'theDate': someDate,
-		'theCoordinates' : { 'xCoord': 0, 'yCoord': 0 } 
-	};
-	
-	/***** FIND GROUPD ******/
-
-	//start timer
-	console.log("Looking for group...");
-	let searchStartTime = performance.now();
-
-	//find people that has performed an action at a certain position and time
-	let newData = findPeople(data, xCoordList, yCoordList, someDate, actionType);
-
-
-	searchingTime = performance.now() - searchStartTime;
-	console.log("Searched in " + searchingTime + " milliseconds.");
 
 	
 /**************************************************************************************************
@@ -177,9 +129,9 @@ function mainPage(data)
    
     /****** DRAW SCATTERPLOT ******/
 
-    handleData(data);
+    newData = handleData(data);
 
-	updatePlot(dataSubset);
+	//updatePlot(dataSubset);
 	updatePlot(newData);
 
  	// Add the X Axis
@@ -197,46 +149,57 @@ function mainPage(data)
     //handle the data
 	function handleData(data)
 	{
+        /***** SORT DATA BY ID ******/
 
-        console.log("Sorting..."); //before
-        var sortStartTime = performance.now();
+        //start timer
+        console.log("Sorting...");
+        let sortStartTime = performance.now();
 
+        //sort data accoring to id
         data.sort(function(a,b){
             return (a["id"] - b["id"]);
         });
 
-        var sortingTime = performance.now() - sortStartTime;
+        //stop timer
+        let sortingTime = performance.now() - sortStartTime;
         console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
-		console.log("handled data: ");
-		console.log(data);
 
         /***** FORMAT THE DATA ******/
-        var parseStartTime = performance.now();
 
+            //start timer
+        let parseStartTime = performance.now();
+
+        //parse the date for correct time-format
         data.forEach(function(d) {
             d.Timestamp = hourParser(d.Timestamp);
             //d.Y = +d.Y;
         });
 
-        var parsingTime = performance.now() - parseStartTime;
+        //stop timer
+        let parsingTime = performance.now() - parseStartTime;
         console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
 
+        /***** SET QUERY REQUIREMENTS ******/
+        var query = {
+            'theAction': actionType,
+            'theDate': someDate,
+            'theCoordinates' : { 'xCoord': 0, 'yCoord': 0 }
+        };
 
-        /***** FIND GROUPD ******/
-        //function(typeOf, theData, x, y, time, type)
-        console.log("Looking for group..."); //after
-        var searchStartTime = performance.now();
+        /***** FIND GROUP ******/
 
-        idsInGroup = findGroup(data, xCoordList, yCoordList, someDate, actionType);
+        //start timer
+        console.log("Looking for group...");
+        let searchStartTime = performance.now();
+
+        //find people that has performed an action at a certain position and time
+        let newData = findPeople(data, xCoordList, yCoordList, someDate, actionType);
+
+
         searchingTime = performance.now() - searchStartTime;
         console.log("Searched in " + searchingTime + " milliseconds.");
-        //idsInGroup = getIds(queryType, data,xCoord, yCoord, someDate, actionType);
-        dataSubset = data.filter(checkId, idsInGroup);
 
-      //  console.log("DATA SUBSET from handle data:  ");
-     //   console.log(dataSubset);
-
-        return dataSubset;
+        return newData;
 	}
 
 	//Update the plot
