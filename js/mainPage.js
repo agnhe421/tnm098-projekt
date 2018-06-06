@@ -24,8 +24,6 @@ function mainPage(data)
     this.data = data;
 
     var div = '#mainVis';
-    
-    //var data; //what? again?
 
     /***** SET MARGINS ******/
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
@@ -58,9 +56,9 @@ function mainPage(data)
 	/****** GLOBAL CONSTANTS *********/
 	const OPENING_TIME_FRIDAY = new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T08:00:00.000Z
 	const CLOSING_TIME_FRIDAY = new Date('2014-06-06T21:59:59.000Z'); //2014-06-06T23:59:59.000Z
-
-	console.log(OPENING_TIME_FRIDAY.getTime());
-	console.log(CLOSING_TIME_FRIDAY.getTime());
+    //
+	// console.log(OPENING_TIME_FRIDAY.getTime());
+	// console.log(CLOSING_TIME_FRIDAY.getTime());
 
 
 	/****** FOR STATISTICS *********/
@@ -68,10 +66,8 @@ function mainPage(data)
     var beforeNine = 0;
     var afterNine = 0;
 
-	/***** COLOR ARRAYS FOR PLOT ******/
-
-	
-	var color = d3.scaleLinear().domain(1402034400000,1402091999000).range("#ede0e8", "#b30000");
+	/***** COLOR ARRAYS FOR PLOT ******/ //TODO: CREATE A FACORY INSTEAD?
+	var color1 = d3.scaleLinear().domain(1402034400000,1402091999000).range("#ede0e8", "#b30000");
 	var color2 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#eddad1", "#7a0177");//d3.scaleLinear();
 	var color3 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#dce7ea", "#810f7c");d3.scaleLinear();
 	var color4 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#e0e8d7", "#0868ac");d3.scaleLinear("#e0e8d7", "#0868ac");
@@ -103,18 +99,17 @@ function mainPage(data)
     //var hourData = hour.getHours();
     //console.log(hourData);
 
-	
-	/***** VARIABLES FOR QUERIES ******/
-	let dataSubset = []; //to store the filtered subset
+
+/**************************************************************************************************
+*
+*											TODO: QUERIES
+*
+**************************************************************************************************/
 	let idsInGroup = []; //to store the ids we want to filter
 	
 	var actionType = "check-in"; //what action are we searching for?
 	var someDate = new Date('2014-06-06T06:52:00.000Z'); //09:04 - what time are we looking
-	let xCoordList = [0, 87, 43] ,  yCoordList = [67, 81, 78]; //coordinates
-	var _queryType = "timeSpent"; //what statistics are we looking for?
-
-    // lista med random ids från datan
-	var list = [203184, 483106, 455752]; 
+	let xCoordList = [87, 0, 79] ,  yCoordList = [81, 67, 89]; //coordinates
 
 /**************************************************************************************************
 *
@@ -123,30 +118,36 @@ function mainPage(data)
 **************************************************************************************************/
 
 	/***** SORT DATA BY ID ******/
-	console.log("Sorting..."); //before
+
+	//start timer
+	console.log("Sorting...");
 	let sortStartTime = performance.now();
-	
+
+	//sort data accoring to id
 	data.sort(function(a,b){
 		return (a["id"] - b["id"]); 
 	});
-	
+
+	//stop timer
 	let sortingTime = performance.now() - sortStartTime;
 	console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
 
 	/***** FORMAT THE DATA ******/
+
+	//start timer
 	let parseStartTime = performance.now();
-    
+
+	//parse the date for correct time-format
     data.forEach(function(d) {
         d.Timestamp = hourParser(d.Timestamp);
         //d.Y = +d.Y;
     });
-    
+
+    //stop timer
     let parsingTime = performance.now() - parseStartTime;
 	console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
    
 	/***** SET QUERY REQUIREMENTS ******/
-
-	
 	var query = {
 		'theAction': actionType,
 		'theDate': someDate,
@@ -154,17 +155,15 @@ function mainPage(data)
 	};
 	
 	/***** FIND GROUPD ******/
-	
-	console.log("Looking for group..."); //after
+
+	//start timer
+	console.log("Looking for group...");
 	let searchStartTime = performance.now();
-	
-	/******* TRYING TO SORT SHIT **********/
 
-	console.log(xCoordList);
-	console.log(yCoordList);
+	//find people that has performed an action at a certain position and time
+	let newData = findPeople(data, xCoordList, yCoordList, someDate, actionType);
 
-	let newData = findGroup(data, xCoordList, yCoordList, someDate, actionType);
-	
+
 	searchingTime = performance.now() - searchStartTime;
 	console.log("Searched in " + searchingTime + " milliseconds.");
 
@@ -215,10 +214,11 @@ function mainPage(data)
 			.attr("cx", function(d){return x(d.X)})
 			.attr("cy", function(d) { return y(d.Y); })
 			.style("fill", function(d, i) {
-				
+                let time = d["Timestamp"] ;
 				if( d.type == "check-in"){
 					//numberOfCheckIns++;
-					console.log("Check-in at (" + d.X + ", " + d.Y + ")." );
+					console.log(d["id"] + " checked in at (" + d.X + ", " + d.Y + ") at " + printTime(time) + ".");
+								//+ time.getHours() + ":" + time.getMinutes() + "." );
 					return "red";
 				}
 				else {
@@ -311,16 +311,21 @@ function mainPage(data)
 			newData = checkTimeSpent(theData);
 		}*/
 
-	function findGroup(theData,  xCoords,  yCoords, time, type) //skicka in vilken typeof value vi letar efter? 
+	function findPeople(theData,  xCoords,  yCoords, time, type) //skicka in vilken typeof value vi letar efter?
 	{
 		var newData = [];
 
 		//Find the ids at point 
 		theData.forEach( function(dataPoint) 
 		{
-			if( checkCoordinates(dataPoint, xCoords[0], yCoords[0], time, type) ){
+
+			/*if( checkCoordinates(dataPoint, xCoords[0], yCoords[0], time, type) ){
 					newData.push(dataPoint);		
-			}
+			}*/
+            if( checkPosition(dataPoint["X"], xCoords[0])
+                && checkPosition(dataPoint["Y"], yCoords[0]) ){
+                newData.push(dataPoint);
+            }
 		})
 
 		//find all actions of an Id
@@ -328,51 +333,42 @@ function mainPage(data)
 
 		//if these was the last coords: return
 		if( xCoords.length == 1){
-			console.log("Group of size " + newData.length + " found.");
 			return newData;
 		}
 
 		//if not: make recursive call
 		else{
-			console.log("Recursive call");
-			
-			newData = findGroupAgain(newData, xCoords.slice(1), yCoords.slice(1));
+			//recursive call
+			newData = findPeopleAgain(newData, xCoords.slice(1), yCoords.slice(1));
 			
 			return newData;	
 		}
-		
 	}
 
-	function findGroupAgain(theData, xCoords, yCoords){
+	function findPeopleAgain(theData, xCoords, yCoords){
 		var newData = [];
-		console.log("x: " + xCoords[0] + " y: " + yCoords[0]);
 		
 		//Find the ids at point 
 		theData.forEach( function(dataPoint) 
 		{
-			if( checkPosition(dataPoint["X"], xCoords[0]) 
+			if( checkPosition(dataPoint["X"], xCoords[0])
 				&& checkPosition(dataPoint["Y"], yCoords[0]) ){
 					newData.push(dataPoint);
-				console.log("Pushing!");
 			}
-		})
+		});
 
 		//find all actions of an Id
 		newData = theData.filter(checkId, newData);
-		//console.log(newData);
+
 
 		//if last coords: return
 		if( xCoords.length == 1){
-			console.log("Group of size " + newData.length + " found.");
-			
 			return newData;
 		}
 		//if not: make recursive call
 		else{
-			console.log("Recursive call second level.")
-			
 			//recursive call
-			newData = findGroupAgain(newData, xCoords.slice(1), yCoords.slice(1));
+			newData = findPeopleAgain( newData, xCoords.slice(1), yCoords.slice(1) );
 			
 			return newData;
 		}
@@ -450,7 +446,7 @@ function mainPage(data)
 		
 		if( /*theData["type"] == "check-in" 
 			&&*/ theData["X"] == x && theData["Y"] == y 
-			&& ( Math.abs(theData["Timestamp"].getTime() - time.getTime())) <= TIME_THRESHOLD ) //Math.floor((theData["Timestamp"]-openingTime)/600000) ==  Math.floor(askedTime/600000))
+			&& timeCheck(time, theData["Timestamp"])) //Math.floor((theData["Timestamp"]-openingTime)/600000) ==  Math.floor(askedTime/600000))
 		{
 				//console.log("Time: " + ( Math.abs(theData["Timestamp"].getTime() - time.getTime()) )/60000 + " minutes."); //divide by 60000 to normalize to minutes.
 				return true;
@@ -477,6 +473,16 @@ function mainPage(data)
 		if ( Math.abs(time1.getTime() - time2.getTime()) <= TIME_THRESHOLD ) 
 			return true; 
 		else return false; 
+	}
+
+	function printTime(date){
+		hour = date.getHours();
+		minutes = date.getMinutes();
+
+		if(minutes < 10){
+			minutes = "0" + date.getMinutes();
+		}
+		return (hour + ":" + minutes);
 	}
 
 }
