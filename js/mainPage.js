@@ -14,6 +14,8 @@ const TIME_THRESHOLD =  MINUTE_IN_THRESHOLD * 60000;
 const STARTING_TIME = performance.now();
 const OPENING_TIME_FRIDAY = new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T07:10:52.000Z
 var hourParser = d3.timeParse("%Y-%m-%d %H:%M:%S");
+
+let xCoordList = [87, 0, 79] ,  yCoordList = [81, 67, 89]; //coordinates
 /**************************************************************************************************
 *
 *								 FUNCTION START
@@ -110,7 +112,7 @@ function mainPage(data)
 	
 	var actionType = "check-in"; //what action are we searching for?
 	var someDate = new Date('2014-06-06T06:52:00.000Z'); //09:04 - what time are we looking
-	let xCoordList = [87, 0, 79] ,  yCoordList = [81, 67, 89]; //coordinates
+
 
 /**************************************************************************************************
 *
@@ -209,7 +211,11 @@ function mainPage(data)
    
     /****** DRAW SCATTERPLOT ******/
 
+<<<<<<< HEAD
     handleData(data);
+=======
+    newData = handleData(data, xCoordList, yCoordList);
+>>>>>>> 0e7a9d6db680dd9296aa55276982eeeb39e7ccd6
 
 	updatePlot(newData);
 
@@ -226,11 +232,18 @@ function mainPage(data)
 
 
     //handle the data
-	function handleData(data)
+	function handleData(data, xCoords, yCoords)
 	{
+<<<<<<< HEAD
 
         console.log("Sorting..."); //before
         var sortStartTime = performance.now();
+=======
+        /***** SORT DATA BY ID ******/
+        //start timer
+        console.log("Sorting...");
+        let sortStartTime = performance.now();
+>>>>>>> 0e7a9d6db680dd9296aa55276982eeeb39e7ccd6
 
         data.sort(function(a,b){
             return (a["id"] - b["id"]);
@@ -241,9 +254,18 @@ function mainPage(data)
 		console.log("handled data: ");
 		console.log(data);
 
+<<<<<<< HEAD
         /***** FORMAT THE DATA ******/
         var parseStartTime = performance.now();
 
+=======
+
+        /***** FORMAT THE DATA ******/
+            //start timer
+        let parseStartTime = performance.now();
+
+        //parse the date for correct time-format
+>>>>>>> 0e7a9d6db680dd9296aa55276982eeeb39e7ccd6
         data.forEach(function(d) {
             d.Timestamp = hourParser(d.Timestamp);
             //d.Y = +d.Y;
@@ -252,6 +274,18 @@ function mainPage(data)
         var parsingTime = performance.now() - parseStartTime;
         console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
 
+<<<<<<< HEAD
+=======
+
+        /***** FIND GROUP ******/
+        //start timer
+        console.log("Looking for group...");
+        let searchStartTime = performance.now();
+
+        //find people that has performed an action at a certain position and time
+
+        var newData = findPeople(data, xCoords, yCoords, someDate, actionType);
+>>>>>>> 0e7a9d6db680dd9296aa55276982eeeb39e7ccd6
 
         /***** FIND GROUPD ******/
         //function(typeOf, theData, x, y, time, type)
@@ -290,14 +324,14 @@ function mainPage(data)
 			//.data(data.filter(checkId, list) )
 			.enter().append("circle")
 			.attr("r", function(d){
-				if(d.type == "check-in") return 6; 
+				if(d["type"] == "check-in") return 6;
 				return 2; 
 			})
 			.attr("cx", function(d){return x(d.X)})
 			.attr("cy", function(d) { return y(d.Y); })
-			.style("fill", function(d, i) {
+			.style("fill", function(d) {
                 let time = d["Timestamp"] ;
-				if( d.type == "check-in"){
+				if( d["type"] == "check-in"){
 					//numberOfCheckIns++;
 					console.log(d["id"] + " checked in at (" + d.X + ", " + d.Y + ") at " + printTime(time) + ".");
 								//+ time.getHours() + ":" + time.getMinutes() + "." );
@@ -339,20 +373,23 @@ function mainPage(data)
 	this.loadSat = function()
 	{
 		var startLoad = performance.now();
+
         var newData = [];
 		
 		console.log("Loading saturday..."); 
 		d3.csv('./data/dataSmallSat.csv', function(data) {
-
 			newData = handleData(data);
 			updatePlot(newData);
+
+		newData = handleData(data, xCoordList, yCoordList);
+
 
 			var loadingTime = performance.now() - startLoad;
 			console.log("Loaded data of size " +data.length + " in " + loadingTime +" milliseconds." );
 		
 		}); 
 			 
-	}	
+	};
 	
 
 /**
@@ -385,7 +422,7 @@ function mainPage(data)
 
 	function findPeople(theData,  xCoords,  yCoords, time, type) //skicka in vilken typeof value vi letar efter?
 	{
-		var newData = [];
+		let newData = [];
 
 		//Find the ids at point 
 		theData.forEach( function(dataPoint) 
@@ -396,9 +433,10 @@ function mainPage(data)
 			}*/
             if( checkPosition(dataPoint["X"], xCoords[0])
                 && checkPosition(dataPoint["Y"], yCoords[0]) ){
+            	console.log( "Added (" + xCoords[0] +  ", " + yCoords[0] + ").");
                 newData.push(dataPoint);
             }
-		})
+		});
 
 		//find all actions of an Id
 		newData = theData.filter(checkId, newData);
@@ -413,12 +451,13 @@ function mainPage(data)
 			//recursive call
 			newData = findPeopleAgain(newData, xCoords.slice(1), yCoords.slice(1));
 			
-			return newData;	
+			return newData;
 		}
+		return newData;
 	}
 
 	function findPeopleAgain(theData, xCoords, yCoords){
-		var newData = [];
+		let newData = [];
 		
 		//Find the ids at point 
 		theData.forEach( function(dataPoint) 
@@ -444,6 +483,7 @@ function mainPage(data)
 			
 			return newData;
 		}
+		//return newData;
 	}
 
 	function retrieveIds(theList) {
@@ -451,7 +491,7 @@ function mainPage(data)
 
 		theList.forEach(function (d) {
 			listOfIds.push(d["id"])
-		})
+		});
 
 		return listOfIds;
 	}
