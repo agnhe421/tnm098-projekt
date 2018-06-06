@@ -14,6 +14,8 @@ const TIME_THRESHOLD =  MINUTE_IN_THRESHOLD * 60000;
 const STARTING_TIME = performance.now();
 const OPENING_TIME_FRIDAY = new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T07:10:52.000Z
 var hourParser = d3.timeParse("%Y-%m-%d %H:%M:%S");
+
+let xCoordList = [87, 0, 79] ,  yCoordList = [81, 67, 89]; //coordinates
 /**************************************************************************************************
 *
 *								 FUNCTION START
@@ -110,7 +112,7 @@ function mainPage(data)
 	
 	var actionType = "check-in"; //what action are we searching for?
 	var someDate = new Date('2014-06-06T06:52:00.000Z'); //09:04 - what time are we looking
-	let xCoordList = [87, 0, 79] ,  yCoordList = [81, 67, 89]; //coordinates
+
 
 /**************************************************************************************************
 *
@@ -266,29 +268,22 @@ function mainPage(data)
 	{
 		
 		var startLoad = performance.now();
-		
-		var emptyDataSet = [];
-		//updatePlot(emptyDataSet);
 
         var newData = [];
 		console.log("Loading saturday..."); 
 		d3.csv('./data/dataSmallSat.csv', function(data) {
 
-		//console.log(handleData(data));
-		newData = handleData(data);
-
-		//console.log("New data: ");
-		//console.log(newData);
+		newData = handleData(data, xCoordList, yCoordList);
 
 		updatePlot(newData);
 
 		var loadingTime = performance.now() - startLoad;
 		console.log("Loaded data of size " +data.length + " in " + loadingTime +" milliseconds." );
 		
-		//return data;
+
 		}); 
 			 
-	}	
+	};
 	
 
 /**
