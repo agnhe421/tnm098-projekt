@@ -129,7 +129,7 @@ function mainPage(data)
    
     /****** DRAW SCATTERPLOT ******/
 
-    newData = handleData(data);
+    newData = handleData(data, xCoordList, yCoordList);
 
 	//updatePlot(dataSubset);
 	updatePlot(newData);
@@ -147,10 +147,9 @@ function mainPage(data)
 
 
     //handle the data
-	function handleData(data)
+	function handleData(data, xCoords, yCoords)
 	{
         /***** SORT DATA BY ID ******/
-
         //start timer
         console.log("Sorting...");
         let sortStartTime = performance.now();
@@ -164,8 +163,8 @@ function mainPage(data)
         let sortingTime = performance.now() - sortStartTime;
         console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
 
-        /***** FORMAT THE DATA ******/
 
+        /***** FORMAT THE DATA ******/
             //start timer
         let parseStartTime = performance.now();
 
@@ -179,21 +178,15 @@ function mainPage(data)
         let parsingTime = performance.now() - parseStartTime;
         console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
 
-        /***** SET QUERY REQUIREMENTS ******/
-        var query = {
-            'theAction': actionType,
-            'theDate': someDate,
-            'theCoordinates' : { 'xCoord': 0, 'yCoord': 0 }
-        };
 
         /***** FIND GROUP ******/
-
         //start timer
         console.log("Looking for group...");
         let searchStartTime = performance.now();
 
         //find people that has performed an action at a certain position and time
-        let newData = findPeople(data, xCoordList, yCoordList, someDate, actionType);
+
+        var newData = findPeople(data, xCoords, yCoords, someDate, actionType);
 
 
         searchingTime = performance.now() - searchStartTime;
@@ -223,14 +216,14 @@ function mainPage(data)
 			//.data(data.filter(checkId, list) )
 			.enter().append("circle")
 			.attr("r", function(d){
-				if(d.type == "check-in") return 6; 
+				if(d["type"] == "check-in") return 6;
 				return 2; 
 			})
 			.attr("cx", function(d){return x(d.X)})
 			.attr("cy", function(d) { return y(d.Y); })
-			.style("fill", function(d, i) {
+			.style("fill", function(d) {
                 let time = d["Timestamp"] ;
-				if( d.type == "check-in"){
+				if( d["type"] == "check-in"){
 					//numberOfCheckIns++;
 					console.log(d["id"] + " checked in at (" + d.X + ", " + d.Y + ") at " + printTime(time) + ".");
 								//+ time.getHours() + ":" + time.getMinutes() + "." );
@@ -328,7 +321,7 @@ function mainPage(data)
 
 	function findPeople(theData,  xCoords,  yCoords, time, type) //skicka in vilken typeof value vi letar efter?
 	{
-		var newData = [];
+		let newData = [];
 
 		//Find the ids at point 
 		theData.forEach( function(dataPoint) 
@@ -339,9 +332,10 @@ function mainPage(data)
 			}*/
             if( checkPosition(dataPoint["X"], xCoords[0])
                 && checkPosition(dataPoint["Y"], yCoords[0]) ){
+            	console.log( "Added (" + xCoords[0] +  ", " + yCoords[0] + ").");
                 newData.push(dataPoint);
             }
-		})
+		});
 
 		//find all actions of an Id
 		newData = theData.filter(checkId, newData);
@@ -356,12 +350,13 @@ function mainPage(data)
 			//recursive call
 			newData = findPeopleAgain(newData, xCoords.slice(1), yCoords.slice(1));
 			
-			return newData;	
+			return newData;
 		}
+		return newData;
 	}
 
 	function findPeopleAgain(theData, xCoords, yCoords){
-		var newData = [];
+		let newData = [];
 		
 		//Find the ids at point 
 		theData.forEach( function(dataPoint) 
@@ -387,6 +382,7 @@ function mainPage(data)
 			
 			return newData;
 		}
+		//return newData;
 	}
 
 	function retrieveIds(theList) {
@@ -394,7 +390,7 @@ function mainPage(data)
 
 		theList.forEach(function (d) {
 			listOfIds.push(d["id"])
-		})
+		});
 
 		return listOfIds;
 	}
