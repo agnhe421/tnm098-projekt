@@ -8,6 +8,7 @@
 **************************************************************************************************/
 /****** GLOBAL CONSTANTS *********/
 ///people need to be within this time to be able to qualify as group
+var uniqueVisitors_ = 0;
 const MINUTE_IN_THRESHOLD = 2;
 //convert to milliseconds
 const TIME_THRESHOLD =  MINUTE_IN_THRESHOLD * 60000; 
@@ -15,7 +16,22 @@ const STARTING_TIME = performance.now();
 const OPENING_TIME_FRIDAY = new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T07:10:52.000Z
 var hourParser = d3.timeParse("%Y-%m-%d %H:%M:%S");
 
-let xCoordList = [87, 0, 79] ,  yCoordList = [81, 67, 89]; //coordinates
+//kids area 
+let xCoordList = [0, 73] ,  yCoordList = [55, 99]; //coordinates
+
+//entertainment area 
+let xCoasterAlley = [0, 99], yCoasterAlley = [0, 33]; 
+let xKids = [73, 99] ,  yKids = [55, 99]; 
+let xWetLand = [0, 82], yWetLand = [33, 55]; 
+let xTundraLand = [0, 73], yTundraLand = [55,99]; 
+
+var color1 = d3.scaleLinear().domain(1402034400000,1402091999000).range("#ede0e8", "#b30000");
+var color2 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#eddad1", "#7a0177");//d3.scaleLinear();
+var color3 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#dce7ea", "#810f7c");d3.scaleLinear();
+var color4 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#e0e8d7", "#0868ac");d3.scaleLinear("#e0e8d7", "#0868ac");
+var color5 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#e5dee6", "#016c59");d3.scaleLinear();
+var color6 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#eeeec3", "#993404");d3.scaleLinear();
+
 /**************************************************************************************************
 *
 *								 FUNCTION START
@@ -25,16 +41,15 @@ let xCoordList = [87, 0, 79] ,  yCoordList = [81, 67, 89]; //coordinates
 function mainPage(data)
 {
     this.data = data;
-
     var div = '#mainVis';
 
     /***** SET MARGINS ******/
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = 900 - margin.left - margin.right,
+        height = 900 - margin.top - margin.bottom;
 
     /*** SET THE RANGE ******/
-    var x = d3.scaleTime().range([0, width]);
+    var x = d3.scaleLinear().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
 
     /***** SET DOMAINS ********/
@@ -70,15 +85,9 @@ function mainPage(data)
     var afterNine = 0;
 
 	/***** COLOR ARRAYS FOR PLOT ******/ //TODO: CREATE A FACORY INSTEAD?
-	var color1 = d3.scaleLinear().domain(1402034400000,1402091999000).range("#ede0e8", "#b30000");
-	var color2 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#eddad1", "#7a0177");//d3.scaleLinear();
-	var color3 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#dce7ea", "#810f7c");d3.scaleLinear();
-	var color4 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#e0e8d7", "#0868ac");d3.scaleLinear("#e0e8d7", "#0868ac");
-	var color5 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#e5dee6", "#016c59");d3.scaleLinear();
-	var color6 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#eeeec3", "#993404");d3.scaleLinear();
 	//var color = d3.scaleLinear("#ede0e8", "#b30000");
 
- //    var color = d3.scaleOrdinal(["#ede0e8", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"]);
+    // var color = d3.scaleOrdinal(["#ede0e8", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"]);
 	// var color2 = d3.scaleOrdinal(["#eddad1", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]);
 	// var color3 = d3.scaleOrdinal(["#dce7ea", "#b3cde3", "#8c96c6", "#8856a7", "#810f7c"]);
 	// var color4 = d3.scaleOrdinal(["#e0e8d7", "#bae4bc", "#7bccc4", "#43a2ca", "#0868ac"]);
@@ -120,105 +129,23 @@ function mainPage(data)
 *
 **************************************************************************************************/
 
-	/***** SORT DATA BY ID ******/
 
-	// console.log("Sorting..."); //before
-	// let sortStartTime = performance.now();
-    //
-	// data.sort(function(a,b){
-	// 	return (a["id"] - b["id"]);
-	// });
-    //
-	// let sortingTime = performance.now() - sortStartTime;
-	// console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
-    //
-	// /***** FORMAT THE DATA ******/
-	// let parseStartTime = performance.now();
-    //
-    // data.forEach(function(d) {
-     //    d.Timestamp = hourParser(d.Timestamp);
-     //    //d.Y = +d.Y;
-    // });
-    //
-    // let parsingTime = performance.now() - parseStartTime;
-	// console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
 
-	//start timer
-	console.log("Sorting...");
-	let sortStartTime = performance.now();
-
-	//sort data accoring to id
-	data.sort(function(a,b){
-		return (a["id"] - b["id"]); 
-	});
-
-	//stop timer
-	let sortingTime = performance.now() - sortStartTime;
-	console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
-
-	/***** FORMAT THE DATA ******/
-
-	//start timer
-	let parseStartTime = performance.now();
-
-	//parse the date for correct time-format
-    data.forEach(function(d) {
-        d.Timestamp = hourParser(d.Timestamp);
-        //d.Y = +d.Y;
-    });
-
-    //stop timer
-    let parsingTime = performance.now() - parseStartTime;
-	console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
-   
-	/***** SET QUERY REQUIREMENTS ******/
-	var query = {
-		'theAction': actionType,
-		'theDate': someDate,
-		'theCoordinates' : { 'xCoord': 0, 'yCoord': 0 } 
-	};
 	
-	/***** FIND GROUPD ******/
-
-	// //function(typeOf, theData, x, y, time, type)
-	// console.log("Looking for group..."); //after
-	// let searchStartTime = performance.now();
-	//
-	// idsInGroup = getIds(data, xCoord, yCoord, someDate, actionType);
-	//
-	// searchingTime = performance.now() - searchStartTime;
-	// console.log("Searched in " + searchingTime + " milliseconds.");
-	// //idsInGroup = getIds(queryType, data,xCoord, yCoord, someDate, actionType);
-	// dataSubset = data.filter(checkId, idsInGroup);
-
-
-	//start timer
-	console.log("Looking for group...");
-
-	let searchStartTime = performance.now();
-
-	//find people that has performed an action at a certain position and time
-	let newData = findPeople(data, xCoordList, yCoordList, someDate, actionType);
-
-
-	searchingTime = performance.now() - searchStartTime;
-	console.log("Searched in " + searchingTime + " milliseconds.");
 /**************************************************************************************************
 *
 *											DRAW
 *
 **************************************************************************************************/
    
-    /****** DRAW SCATTERPLOT ******/
-
-<<<<<<< HEAD
-    handleData(data);
-=======
+    /****** DRAW SCATTERPLOT ******/	
     newData = handleData(data, xCoordList, yCoordList);
->>>>>>> 0e7a9d6db680dd9296aa55276982eeeb39e7ccd6
 
-	updatePlot(newData);
 
+	//UPDATE PLOT 	
+	updatePlot(newData); 
+	
+	
  	// Add the X Axis
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -234,48 +161,35 @@ function mainPage(data)
     //handle the data
 	function handleData(data, xCoords, yCoords)
 	{
-<<<<<<< HEAD
-
-        console.log("Sorting..."); //before
-        var sortStartTime = performance.now();
-=======
         /***** SORT DATA BY ID ******/
         //start timer
         console.log("Sorting...");
         let sortStartTime = performance.now();
->>>>>>> 0e7a9d6db680dd9296aa55276982eeeb39e7ccd6
 
+        //sort data accoring to id
         data.sort(function(a,b){
             return (a["id"] - b["id"]);
         });
 
-        var sortingTime = performance.now() - sortStartTime;
+        //stop timer
+        let sortingTime = performance.now() - sortStartTime;
         console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
-		console.log("handled data: ");
-		console.log(data);
 
-<<<<<<< HEAD
-        /***** FORMAT THE DATA ******/
-        var parseStartTime = performance.now();
-
-=======
 
         /***** FORMAT THE DATA ******/
             //start timer
         let parseStartTime = performance.now();
 
         //parse the date for correct time-format
->>>>>>> 0e7a9d6db680dd9296aa55276982eeeb39e7ccd6
         data.forEach(function(d) {
             d.Timestamp = hourParser(d.Timestamp);
             //d.Y = +d.Y;
         });
 
-        var parsingTime = performance.now() - parseStartTime;
+        //stop timer
+        let parsingTime = performance.now() - parseStartTime;
         console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
 
-<<<<<<< HEAD
-=======
 
         /***** FIND GROUP ******/
         //start timer
@@ -284,24 +198,23 @@ function mainPage(data)
 
         //find people that has performed an action at a certain position and time
 
-        var newData = findPeople(data, xCoords, yCoords, someDate, actionType);
->>>>>>> 0e7a9d6db680dd9296aa55276982eeeb39e7ccd6
-
-        /***** FIND GROUPD ******/
-        //function(typeOf, theData, x, y, time, type)
-        console.log("Looking for group..."); //after
-        var searchStartTime = performance.now();
-
-        idsInGroup = findPeople(data, xCoordList, yCoordList, someDate, actionType);
-        searchingTime = performance.now() - searchStartTime;
+        //var newData = findPeople(data, xCoords, yCoords, someDate, actionType);
+	
+		var newData = peopleInArea(data, xCoords, yCoords);
+		//console.log(newData);
+		searchingTime = performance.now() - searchStartTime;
         console.log("Searched in " + searchingTime + " milliseconds.");
-        //idsInGroup = getIds(queryType, data,xCoord, yCoord, someDate, actionType);
-        dataSubset = data.filter(checkId, idsInGroup);
+		
+		 console.log("Filtering...");
+		let filterStartTime = performance.now();
+		
+		var newData1 = pruneData(newData, xCoords, yCoords);
+	
+		filterTime = performance.now() - filterStartTime;
+        console.log("Filtered in " + filterTime + " milliseconds.");
+        
 
-      //  console.log("DATA SUBSET from handle data:  ");
-     //   console.log(dataSubset);
-
-        return dataSubset;
+        return newData1;
 	}
 
 	//Update the plot
@@ -312,6 +225,7 @@ function mainPage(data)
 *
 **************************************************************************************************/
 
+	
 	function updatePlot(data)
 	{
 		console.log("Clearing plot...");
@@ -333,38 +247,15 @@ function mainPage(data)
                 let time = d["Timestamp"] ;
 				if( d["type"] == "check-in"){
 					//numberOfCheckIns++;
-					console.log(d["id"] + " checked in at (" + d.X + ", " + d.Y + ") at " + printTime(time) + ".");
-								//+ time.getHours() + ":" + time.getMinutes() + "." );
 					return "red";
 				}
 				else {
 					let hour = d["Timestamp"] - OPENING_TIME_FRIDAY;
 
-					if( d["id"] == idsInGroup[0] ){
-						return color(Math.floor(hour/900000)-1);
-					}
-					else if( d["id"] == idsInGroup[1] ){
-						return color2(Math.floor(hour/900000)-1);
-					}
-					else if(d["id"] == idsInGroup[2]){
-						return color3(Math.floor(hour/900000)-1);
-					}
-					else if(d["id"] == idsInGroup[3]){
-						return color3(Math.floor(hour/900000)-1);
-					}
-					else if(d["id"] == idsInGroup[4]){
-						return color4(Math.floor(hour/900000)-1);
-					}
-					else if(d["id"] == idsInGroup[5]){
-						return color5(Math.floor(hour/900000)-1);
-					}		
-					else if(d["id"] == idsInGroup[6]){
-						return color6(Math.floor(hour/900000)-1);
-					}
-					else{
 						//console.log("Wrong coloring!");
-						return "black";
-					}
+					
+						return "#ede0e8" ;
+					
 				}
 			});
 			console.log("Drawing done.");
@@ -372,21 +263,21 @@ function mainPage(data)
 	
 	this.loadSat = function()
 	{
+		
 		var startLoad = performance.now();
 
         var newData = [];
-		
 		console.log("Loading saturday..."); 
 		d3.csv('./data/dataSmallSat.csv', function(data) {
-			newData = handleData(data);
-			updatePlot(newData);
 
 		newData = handleData(data, xCoordList, yCoordList);
 
+		updatePlot(newData);
 
-			var loadingTime = performance.now() - startLoad;
-			console.log("Loaded data of size " +data.length + " in " + loadingTime +" milliseconds." );
+		var loadingTime = performance.now() - startLoad;
+		console.log("Loaded data of size " +data.length + " in " + loadingTime +" milliseconds." );
 		
+
 		}); 
 			 
 	};
@@ -405,6 +296,8 @@ function mainPage(data)
 		}
 		return false;
 	}
+	
+	
 
 
 	/**
@@ -419,7 +312,35 @@ function mainPage(data)
 	if (typeOf == "timeSpent"){
 			newData = checkTimeSpent(theData);
 		}*/
+	function isInRange(dataPoint, xRange, yRange){
+		if(dataPoint["X"] >= d3.min(xRange) && dataPoint["X"] <= d3.max(xRange)
+			&& dataPoint["Y"] >= d3.min(yRange) && dataPoint["Y"] <= d3.max(yRange) )
+			return true;
+		else return false;
+	}
 
+	function peopleInArea(theData, theXRange, theYRange){
+		let newData = [];
+				
+		theData.forEach( function(dataPoint)
+		{
+			if( !newData.includes( dataPoint ) && checkAction(dataPoint["type"]) && isInRange(dataPoint, theXRange, theYRange) ){
+				
+				newData.push(dataPoint);
+			}
+			
+		});
+		//log number of unique visitors
+		uniqueVisitors_ = newData.length;
+	
+		console.log("Unique visitors (from people in area): " + uniqueVisitors_)
+		//find all actions of those Id's
+		newData = theData.filter(checkId, newData);
+		
+		
+		return newData;
+	}
+		
 	function findPeople(theData,  xCoords,  yCoords, time, type) //skicka in vilken typeof value vi letar efter?
 	{
 		let newData = [];
@@ -431,16 +352,23 @@ function mainPage(data)
 			/*if( checkCoordinates(dataPoint, xCoords[0], yCoords[0], time, type) ){
 					newData.push(dataPoint);		
 			}*/
-            if( checkPosition(dataPoint["X"], xCoords[0])
+			
+			//Find people who has been at the same position 
+			//console.log("Checking point (" + dataPoint["X"] + ", " + dataPoint["Y"]);
+			//console.log(dataPoint["type"]); 
+            if(checkAction(dataPoint["type"]) && checkPosition(dataPoint["X"], xCoords[0])
                 && checkPosition(dataPoint["Y"], yCoords[0]) ){
-            	console.log( "Added (" + xCoords[0] +  ", " + yCoords[0] + ").");
+            	
                 newData.push(dataPoint);
             }
+			
+			
+			
 		});
 
 		//find all actions of an Id
 		newData = theData.filter(checkId, newData);
-
+		
 		//if these was the last coords: return
 		if( xCoords.length == 1){
 			return newData;
@@ -462,15 +390,16 @@ function mainPage(data)
 		//Find the ids at point 
 		theData.forEach( function(dataPoint) 
 		{
-			if( checkPosition(dataPoint["X"], xCoords[0])
+			if( checkAction(dataPoint["type"])&& checkPosition(dataPoint["X"], xCoords[0])
 				&& checkPosition(dataPoint["Y"], yCoords[0]) ){
+					console.log( "Added (" + dataPoint["X"] +  ", " + dataPoint["Y"] + ").");
 					newData.push(dataPoint);
 			}
 		});
 
 		//find all actions of an Id
 		newData = theData.filter(checkId, newData);
-
+		console.log(newData);
 
 		//if last coords: return
 		if( xCoords.length == 1){
@@ -486,67 +415,85 @@ function mainPage(data)
 		//return newData;
 	}
 
-	function retrieveIds(theList) {
-		listOfIds = [];
-
-		theList.forEach(function (d) {
-			listOfIds.push(d["id"])
-		});
-
-		return listOfIds;
+	/*function checkPosition2(dataPoint, range){
+		if(dataPoint >= d3.min(range) && dataPoint <= d3.max(range) )
+			
+			return true;
+		else return false;
 	}
-
+*/
 /****
-*
 *
 *				DELETE? Eller vänta och se om vi har användning för den?
 *
 ***/
-//
-// function checkCoordinates(theData, x, y, time, type){
-// 	//console.log("Date: " + time);
-// 	//normalize time to current dates
-// 	var openingTime = new Date('2014-06-06T06:00:00.000Z');
-// 	var askedTime = time - openingTime;
-// 	//console.log("Query time: " + askedTime/600000 + "mins from opening time.");
-//
-// 	if( theData["type"] == "check-in"
-// 		&& theData["X"] == x && theData["Y"] == y )
-// 		//&& ( Math.abs(theData["Timestamp"].getTime() - time.getTime())) <= TIME_THRESHOLD ) //Math.floor((theData["Timestamp"]-openingTime)/600000) ==  Math.floor(askedTime/600000))
-// 	{
-// 			//console.log("Time: " + ( Math.abs(theData["Timestamp"].getTime() - time.getTime()) )/60000 + " minutes."); //divide by 60000 to normalize to minutes.
-// 			return true;
+
+	// function retrieveIds(theList) {
+		// listOfIds = [];
+
+		// theList.forEach(function (d) {
+			// listOfIds.push(d["id"])
+		// });
+
+		// return listOfIds;
+	// }
+	
+	function pruneData(list, xCoordList, yCoordList, theCounter){
+		var newList = [];
+		var idsToPrune = [];
+		//console.log("Length " + list.length);
+		//console.log(list);
+		//console.log(newList);
 
 
-
-	function pruneData(list, xCoordList, yCoordList){
-		var newList = list;
-
-		console.log("Length " + list.length);
-		console.log(list);
-		console.log(newList);
-
-		let i = 0;
-		while(i < newList.length){
-			console.log("Comparing ("+ newList[i]["X"] + ", " + newList[i]["Y"] 
-						+ ") with (" + xCoordList[0] + ", " + yCoordList[0] + ").");
+		//find all ids to delete
+		idsToPrune = idsOutsideRange(list, xCoordList, yCoordList);
+		console.log("isd to prune: "+ idsToPrune.length); 
+		//subtract deleted visitors from counter
+		uniqueVisitors_ = uniqueVisitors_ - idsToPrune.length;
+		console.log("Unique visitors in group: " + uniqueVisitors_);
 		
-
-			if(!checkPosition(xCoordList[0], newList[i]["X"]) 
-			&& !checkPosition(yCoordList[0], newList[i]["Y"])) {
-					console.log("Checked, not equal!");
-					console.log("i: " + i)
-					console.log("before splice: " + newList.length); 
-						newList.splice(i,1);
-						console.log("after splice: " + newList.length); 
+		
+		//check this
+		newList = list.filter( deleteId, idsToPrune );
+		
+		console.log("new list: " + newList.length); 
+		return newList;
+		
+	}
+	
+	function deleteId(value)
+		{
+			for( var i = 0 ; i < this.length ; i++){
+				if(value["id"] == this[i])
+					return false;
+			}
+			return true;
+		}
+	
+	function idsOutsideRange(theList, xRange, yRange){
+		
+		var idList = [];
+		let i = 0;
+		
+		console.log("theList.length: " + theList.length);
+		
+		while(i < theList.length){
+			/*if(!checkPosition(xCoordList[0], newList[i]["X"]) 
+			&& !checkPosition(yCoordList[0], newList[i]["Y"])) {*/
+		
+			if( !idList.includes( theList[i]["id"] ) && checkAction( theList[i]["type"] ) && !isInRange( theList[i], xRange, yRange ) ) {
+					//newList.splice(i,1); //have to store ids of the people who checked in outside of range and then delete all of those.
+					//console.log("Pushed: " + theList[i]["id"]);
+					idList.push( theList[i]["id"] );
+						
 			}
 			else i++; 
 		}
-			return newList;
-		// }
 		
-
+		return idList;
 	}
+
 
 	/**
 	*
@@ -571,11 +518,9 @@ function mainPage(data)
 		var askedTime = time - openingTime;
 		//console.log("Query time: " + askedTime/600000 + "mins from opening time.");
 		
-
 		if( /*theData["type"] == "check-in" 
 			&&*/ theData["X"] == x && theData["Y"] == y 
 			&& timeCheck(time, theData["Timestamp"])) //Math.floor((theData["Timestamp"]-openingTime)/600000) ==  Math.floor(askedTime/600000))
-
 		{
 				//console.log("Time: " + ( Math.abs(theData["Timestamp"].getTime() - time.getTime()) )/60000 + " minutes."); //divide by 60000 to normalize to minutes.
 				return true;
@@ -585,7 +530,7 @@ function mainPage(data)
 
 	function checkPosition(point1, point2)
 	{
-		if(point1 == point2)
+		if(point1 > point2)
 			return true; 
 		else return false; 
 	}
@@ -603,7 +548,15 @@ function mainPage(data)
 			return true; 
 		else return false; 
 	}
-
+	
+	function checkTime(time, data)
+	{
+		if ( time == data["Timestamp"] ) 
+			return true; 
+		else return false; 
+	}
+	
+	
 	function printTime(date){
 		hour = date.getHours();
 		minutes = date.getMinutes();
