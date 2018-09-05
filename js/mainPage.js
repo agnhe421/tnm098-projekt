@@ -9,6 +9,8 @@
 /****** GLOBAL CONSTANTS *********/
 ///people need to be within this time to be able to qualify as group
 var uniqueVisitors_ = 0;
+var query = "Timestamp"; 
+
 const MINUTE_IN_THRESHOLD = 2;
 //convert to milliseconds
 const TIME_THRESHOLD =  MINUTE_IN_THRESHOLD * 60000; 
@@ -26,10 +28,9 @@ let xKids = [73, 99] ,  yKids = [56, 99];
 let xWetLand = [0, 82], yWetLand = [33, 55]; 
 let xTundraLand = [0, 72], yTundraLand = [56,99]; 
 
+let time = [OPENING_TIME_FRIDAY.getTime() +  9*3600*1000 , OPENING_TIME_FRIDAY.getTime() + 13*3600*1000 ]; 
 
-
-
-xCoordList = xKids;
+xCoordList = time;
 yCoordList = yKids;
 
 
@@ -115,7 +116,7 @@ function mainPage(data)
 	//console.log("Colors: " + colorMatrix);
     
     /***** PARSE TIME DATA ******/
-  //  var hourParser = d3.timeParse("%Y-%m-%d %H:%M:%S");
+	//var hourParser = d3.timeParse("%Y-%m-%d %H:%M:%S");
     //var time = hourParser(data["Timestamp"]);
     //var hour = d3.timeHour.round(time);
     //var hourData = hour.getHours();
@@ -138,8 +139,6 @@ function mainPage(data)
 *											RUNTIME
 *
 **************************************************************************************************/
-
-
 
 	
 /**************************************************************************************************
@@ -211,11 +210,14 @@ function mainPage(data)
         //var newData = findPeople(data, xCoords, yCoords, someDate, actionType);
 	
 		var newData = peopleInArea(data, xCoords, yCoords);
-		//console.log(newData);
+		var newData2 = peopleTime(data, xCoords, yCoords); 
+		console.log("new data 2:");
+		console.log(newData2);
+		
 		searchingTime = performance.now() - searchStartTime;
         console.log("Searched in " + searchingTime + " milliseconds.");
 		
-		 console.log("Filtering...");
+		console.log("Filtering...");
 		let filterStartTime = performance.now();
 		
 		var newData1 = pruneData(newData, xCoords, yCoords);
@@ -339,11 +341,11 @@ function mainPage(data)
 	*************************************************************************************/	
 	
 	
-	/**
+	/************************************************************************************
 	*
 	*			FIND PEOPLE IN AREA
 	*
-	**/
+	************************************************************************************/
 	
 
 	function peopleInArea(theData, theXRange, theYRange){
@@ -355,7 +357,7 @@ function mainPage(data)
 		{
 			if( !idData.includes( dataPoint["id"] )  
 				&& checkAction(dataPoint["type"]) 
-				&& isInRange(dataPoint, theXRange, theYRange) ){
+				&& isInRange(dataPoint, theXRange, theYRange, query) ){
 				
 					idData.push(dataPoint["id"]);
 			}
@@ -372,11 +374,40 @@ function mainPage(data)
 		return newData;
 	}
 	
-	/**
+	
+	
+	function peopleTime(theData, theXRange, theYRange){
+		
+		let idData = [];
+		let newData = [];
+		
+		//look for all ids that satisfies requirements
+		theData.forEach( function(dataPoint)
+		{
+			if( !idData.includes( dataPoint["id"] )  
+				&& checkAction(dataPoint["type"]) 
+				&& isInRange(dataPoint, theXRange, theYRange, query) ){
+				
+					idData.push(dataPoint["id"]);
+			}
+		});
+		
+		//log number of unique visitors
+		uniqueVisitors_ = idData.length;
+		
+		console.log("Unique visitors (from people in area): " + uniqueVisitors_)
+		
+		//find all actions of those Id's
+		newData = theData.filter(checkId, idData);
+		
+		return newData;
+		
+	}
+	/**************************************************************************************
 	*
 	*			PRUNE
 	*
-	**/
+	***************************************************************************************/
 	
 		function pruneData(list, xCoordList, yCoordList){
 		var newList = [];
@@ -384,8 +415,9 @@ function mainPage(data)
 
 		//find all ids to delete
 		idsToPrune = idsOutsideRange(list, xCoordList, yCoordList);
+
+		console.log("ids to prune: "+ idsToPrune.length); 
 		
-		console.log("isd to prune: "+ idsToPrune.length); 
 		//subtract deleted visitors from counter
 		uniqueVisitors_ = uniqueVisitors_ - idsToPrune.length;
 		console.log("Unique visitors in group: " + uniqueVisitors_);
@@ -400,7 +432,7 @@ function mainPage(data)
 	}
 	
 
-
+	
 	
 	/*************************************************************************************
 	*
@@ -410,11 +442,21 @@ function mainPage(data)
 		
 		
 		
-	function isInRange(dataPoint, xRange, yRange){
-		if(dataPoint["X"] >= d3.min(xRange) && dataPoint["X"] <= d3.max(xRange)
-			&& dataPoint["Y"] >= d3.min(yRange) && dataPoint["Y"] <= d3.max(yRange) )
-			return true;
-		else return false;
+	function isInRange(dataPoint, xRange, yRange, query){
+		if(query == "area"){
+				if(dataPoint["X"] >= d3.min(xRange) && dataPoint["X"] <= d3.max(xRange)
+					&& dataPoint["Y"] >= d3.min(yRange) && dataPoint["Y"] <= d3.max(yRange) )
+					return true;
+				}
+				
+		else if(query == "Timestamp")
+		{
+			if(dataPoint[query].getTime() >= d3.min(xRange) && dataPoint[query].getTime() <= d3.max(xRange))
+				return true; 
+		
+		}
+			
+		else return false ; 
 	}
 	
 	
@@ -428,23 +470,18 @@ function mainPage(data)
 		var idList = [];
 		let i = 0;
 		
-		//console.log("theList.length: " + theList.length);
-		
 		while(i < theList.length){
-			/*if(!checkPosition(xCoordList[0], newList[i]["X"]) 
-			&& !checkPosition(yCoordList[0], newList[i]["Y"])) {*/
-		
-			if( !idList.includes( theList[i]["id"] ) && checkAction( theList[i]["type"] ) && !isInRange( theList[i], xRange, yRange ) ) {
+			if( !idList.includes( theList[i]["id"] ) && checkAction( theList[i]["type"] ) && !isInRange( theList[i], xRange, yRange, query ) ) {
 					//newList.splice(i,1); //have to store ids of the people who checked in outside of range and then delete all of those.
-					//console.log("Pushed: " + theList[i]["id"]);
-					idList.push( theList[i]["id"] );
-						
+					idList.push( theList[i]["id"] );		
 			}
 			else i++; 
 		}
 		
 		return idList;
 	}
+	
+	
 	
 
 	/**

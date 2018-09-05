@@ -2,8 +2,8 @@
  * Created by Agnes on 2018-03-26.
  */
 queue()
-  //.defer(d3.csv,'./data/testDataSetSMALL.csv')
-  .defer(d3.csv,'./data/testData2.csv')
+  .defer(d3.csv,'./data/smallData.csv')
+  //.defer(d3.csv,'./data/testData2.csv')
     .await(draw);
 
 var test;
