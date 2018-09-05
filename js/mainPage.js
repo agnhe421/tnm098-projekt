@@ -17,13 +17,23 @@ const OPENING_TIME_FRIDAY = new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T0
 var hourParser = d3.timeParse("%Y-%m-%d %H:%M:%S");
 
 //kids area 
-let xCoordList = [0, 73] ,  yCoordList = [55, 99]; //coordinates
+let xCoordList = [0, 99];  
+let yCoordList = [0, 99]; //coordinates
 
 //entertainment area 
 let xCoasterAlley = [0, 99], yCoasterAlley = [0, 33]; 
-let xKids = [73, 99] ,  yKids = [55, 99]; 
+let xKids = [73, 99] ,  yKids = [56, 99]; 
 let xWetLand = [0, 82], yWetLand = [33, 55]; 
-let xTundraLand = [0, 73], yTundraLand = [55,99]; 
+let xTundraLand = [0, 72], yTundraLand = [56,99]; 
+
+
+
+
+xCoordList = xKids;
+yCoordList = yKids;
+
+
+
 
 var color1 = d3.scaleLinear().domain(1402034400000,1402091999000).range("#ede0e8", "#b30000");
 var color2 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#eddad1", "#7a0177");//d3.scaleLinear();
@@ -239,9 +249,9 @@ function mainPage(data)
 			.enter().append("circle")
 			.attr("r", function(d){
 				if(d["type"] == "check-in") return 6;
-				return 2; 
+				else return 2; 
 			})
-			.attr("cx", function(d){return x(d.X)})
+			.attr("cx", function(d){ return x(d.X); })
 			.attr("cy", function(d) { return y(d.Y); })
 			.style("fill", function(d) {
                 let time = d["Timestamp"] ;
@@ -291,11 +301,20 @@ function mainPage(data)
 	function checkId(value)
 	{
 		for( var i = 0 ; i < this.length ; i++){
-			if(value["id"] == this[i]["id"])
+			if(value["id"] == this[i])
 				return true;
 		}
 		return false;
 	}
+	
+	function deleteId(value)
+	{
+		for( var i = 0 ; i < this.length ; i++){
+			if(value["id"] == this[i])
+				return false;
+		}
+		return true;
+	}	
 	
 	
 
@@ -312,142 +331,60 @@ function mainPage(data)
 	if (typeOf == "timeSpent"){
 			newData = checkTimeSpent(theData);
 		}*/
-	function isInRange(dataPoint, xRange, yRange){
-		if(dataPoint["X"] >= d3.min(xRange) && dataPoint["X"] <= d3.max(xRange)
-			&& dataPoint["Y"] >= d3.min(yRange) && dataPoint["Y"] <= d3.max(yRange) )
-			return true;
-		else return false;
-	}
+		
+	/*************************************************************************************
+	*
+	*						MAIN SEARCH FUNCTIONS
+	*
+	*************************************************************************************/	
+	
+	
+	/**
+	*
+	*			FIND PEOPLE IN AREA
+	*
+	**/
+	
 
 	function peopleInArea(theData, theXRange, theYRange){
+		let idData = [];
 		let newData = [];
-				
+		
+		//look for all ids that satisfies requirements
 		theData.forEach( function(dataPoint)
 		{
-			if( !newData.includes( dataPoint ) && checkAction(dataPoint["type"]) && isInRange(dataPoint, theXRange, theYRange) ){
+			if( !idData.includes( dataPoint["id"] )  
+				&& checkAction(dataPoint["type"]) 
+				&& isInRange(dataPoint, theXRange, theYRange) ){
 				
-				newData.push(dataPoint);
+					idData.push(dataPoint["id"]);
 			}
-			
 		});
+		
 		//log number of unique visitors
-		uniqueVisitors_ = newData.length;
-	
+		uniqueVisitors_ = idData.length;
+		
 		console.log("Unique visitors (from people in area): " + uniqueVisitors_)
+		
 		//find all actions of those Id's
-		newData = theData.filter(checkId, newData);
-		
+		newData = theData.filter(checkId, idData);
 		
 		return newData;
 	}
-		
-	function findPeople(theData,  xCoords,  yCoords, time, type) //skicka in vilken typeof value vi letar efter?
-	{
-		let newData = [];
-
-		//Find the ids at point 
-		theData.forEach( function(dataPoint) 
-		{
-
-			/*if( checkCoordinates(dataPoint, xCoords[0], yCoords[0], time, type) ){
-					newData.push(dataPoint);		
-			}*/
-			
-			//Find people who has been at the same position 
-			//console.log("Checking point (" + dataPoint["X"] + ", " + dataPoint["Y"]);
-			//console.log(dataPoint["type"]); 
-            if(checkAction(dataPoint["type"]) && checkPosition(dataPoint["X"], xCoords[0])
-                && checkPosition(dataPoint["Y"], yCoords[0]) ){
-            	
-                newData.push(dataPoint);
-            }
-			
-			
-			
-		});
-
-		//find all actions of an Id
-		newData = theData.filter(checkId, newData);
-		
-		//if these was the last coords: return
-		if( xCoords.length == 1){
-			return newData;
-		}
-
-		//if not: make recursive call
-		else{
-			//recursive call
-			newData = findPeopleAgain(newData, xCoords.slice(1), yCoords.slice(1));
-			
-			return newData;
-		}
-		return newData;
-	}
-
-	function findPeopleAgain(theData, xCoords, yCoords){
-		let newData = [];
-		
-		//Find the ids at point 
-		theData.forEach( function(dataPoint) 
-		{
-			if( checkAction(dataPoint["type"])&& checkPosition(dataPoint["X"], xCoords[0])
-				&& checkPosition(dataPoint["Y"], yCoords[0]) ){
-					console.log( "Added (" + dataPoint["X"] +  ", " + dataPoint["Y"] + ").");
-					newData.push(dataPoint);
-			}
-		});
-
-		//find all actions of an Id
-		newData = theData.filter(checkId, newData);
-		console.log(newData);
-
-		//if last coords: return
-		if( xCoords.length == 1){
-			return newData;
-		}
-		//if not: make recursive call
-		else{
-			//recursive call
-			newData = findPeopleAgain( newData, xCoords.slice(1), yCoords.slice(1) );
-			
-			return newData;
-		}
-		//return newData;
-	}
-
-	/*function checkPosition2(dataPoint, range){
-		if(dataPoint >= d3.min(range) && dataPoint <= d3.max(range) )
-			
-			return true;
-		else return false;
-	}
-*/
-/****
-*
-*				DELETE? Eller vänta och se om vi har användning för den?
-*
-***/
-
-	// function retrieveIds(theList) {
-		// listOfIds = [];
-
-		// theList.forEach(function (d) {
-			// listOfIds.push(d["id"])
-		// });
-
-		// return listOfIds;
-	// }
 	
-	function pruneData(list, xCoordList, yCoordList, theCounter){
+	/**
+	*
+	*			PRUNE
+	*
+	**/
+	
+		function pruneData(list, xCoordList, yCoordList){
 		var newList = [];
 		var idsToPrune = [];
-		//console.log("Length " + list.length);
-		//console.log(list);
-		//console.log(newList);
-
 
 		//find all ids to delete
 		idsToPrune = idsOutsideRange(list, xCoordList, yCoordList);
+		
 		console.log("isd to prune: "+ idsToPrune.length); 
 		//subtract deleted visitors from counter
 		uniqueVisitors_ = uniqueVisitors_ - idsToPrune.length;
@@ -462,21 +399,36 @@ function mainPage(data)
 		
 	}
 	
-	function deleteId(value)
-		{
-			for( var i = 0 ; i < this.length ; i++){
-				if(value["id"] == this[i])
-					return false;
-			}
-			return true;
-		}
+
+
 	
+	/*************************************************************************************
+	*
+	*						AUXILLARY SUPPORT FUNCTIONS
+	*
+	*************************************************************************************/			
+		
+		
+		
+	function isInRange(dataPoint, xRange, yRange){
+		if(dataPoint["X"] >= d3.min(xRange) && dataPoint["X"] <= d3.max(xRange)
+			&& dataPoint["Y"] >= d3.min(yRange) && dataPoint["Y"] <= d3.max(yRange) )
+			return true;
+		else return false;
+	}
+	
+	
+	/**
+	*
+	*			SUPPORT FOR PRUNE
+	*
+	**/
 	function idsOutsideRange(theList, xRange, yRange){
 		
 		var idList = [];
 		let i = 0;
 		
-		console.log("theList.length: " + theList.length);
+		//console.log("theList.length: " + theList.length);
 		
 		while(i < theList.length){
 			/*if(!checkPosition(xCoordList[0], newList[i]["X"]) 
@@ -493,7 +445,7 @@ function mainPage(data)
 		
 		return idList;
 	}
-
+	
 
 	/**
 	*
@@ -565,6 +517,112 @@ function mainPage(data)
 			minutes = "0" + date.getMinutes();
 		}
 		return (hour + ":" + minutes);
+	}
+	
+	
+	
+	/****
+	*
+	*				DELETE? Eller vänta och se om vi har användning för den?
+	*
+	***/
+	
+	/*function checkPosition2(dataPoint, range){
+		if(dataPoint >= d3.min(range) && dataPoint <= d3.max(range) )
+			
+			return true;
+		else return false;
+	}
+*/
+
+
+	 function retrieveIds(theList) {
+		 listOfIds = [];
+
+		 theList.forEach(function (d) {
+			 
+			 if(!listOfIds.includes(d["id"]))
+				listOfIds.push(d["id"])
+		 });
+
+		 return listOfIds;
+	 }
+	
+	
+	
+	
+		function findPeople(theData,  xCoords,  yCoords, time, type) //skicka in vilken typeof value vi letar efter?
+	{
+		let newData = [];
+
+		//Find the ids at point 
+		theData.forEach( function(dataPoint) 
+		{
+
+			/*if( checkCoordinates(dataPoint, xCoords[0], yCoords[0], time, type) ){
+					newData.push(dataPoint);		
+			}*/
+			
+			//Find people who has been at the same position 
+			//console.log("Checking point (" + dataPoint["X"] + ", " + dataPoint["Y"]);
+			//console.log(dataPoint["type"]); 
+            if(checkAction(dataPoint["type"]) && checkPosition(dataPoint["X"], xCoords[0])
+                && checkPosition(dataPoint["Y"], yCoords[0]) ){
+            	
+                newData.push(dataPoint);
+            }
+			
+			
+			
+		});
+
+		//find all actions of an Id
+		newData = theData.filter(checkId, newData);
+		
+		//if these was the last coords: return
+		if( xCoords.length == 1){
+			return newData;
+		}
+
+		//if not: make recursive call
+		else{
+			//recursive call
+			newData = findPeopleAgain(newData, xCoords.slice(1), yCoords.slice(1));
+			
+			return newData;
+		}
+		return newData;
+	}
+
+	function findPeopleAgain(theData, xCoords, yCoords){
+		let newData = [];
+		
+		//Find the ids at point 
+		theData.forEach( function(dataPoint) 
+		{
+			if( checkAction(dataPoint["type"])&& checkPosition(dataPoint["X"], xCoords[0])
+				&& checkPosition(dataPoint["Y"], yCoords[0]) ){
+					console.log( "Added (" + dataPoint["X"] +  ", " + dataPoint["Y"] + ").");
+					newData.push(dataPoint);
+			}
+		});
+
+		//find all actions of an Id
+		newData = theData.filter(checkId, newData);
+		console.log(newData);
+
+		//if last coords: return
+		if( xCoords.length == 1){
+			return newData;
+		}
+		//if not: make recursive call
+		else{
+			//recursive call
+			newData = findPeopleAgain( newData, xCoords.slice(1), yCoords.slice(1) );
+			
+			return newData;
+		}
+		//return newData;
 	}
 
 }
