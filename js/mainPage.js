@@ -30,7 +30,7 @@ let xTundraLand = [0, 72], yTundraLand = [56,99];
 
 let time = [OPENING_TIME_FRIDAY.getTime() +  9*3600*1000 , OPENING_TIME_FRIDAY.getTime() + 13*3600*1000 ]; 
 
-xCoordList = time;
+xCoordList = xKids;
 yCoordList = yKids;
 
 
@@ -210,9 +210,9 @@ function mainPage(data)
         //var newData = findPeople(data, xCoords, yCoords, someDate, actionType);
 	
 		var newData = peopleInArea(data, xCoords, yCoords);
-		var newData2 = peopleTime(data, xCoords, yCoords); 
-		console.log("new data 2:");
-		console.log(newData2);
+		/*var newData2 = peopleTime(data, xCoords, yCoords); */
+		console.log("newData:");
+		console.log(newData);
 		
 		searchingTime = performance.now() - searchStartTime;
         console.log("Searched in " + searchingTime + " milliseconds.");
@@ -220,6 +220,7 @@ function mainPage(data)
 		console.log("Filtering...");
 		let filterStartTime = performance.now();
 		
+
 		var newData1 = pruneData(newData, xCoords, yCoords);
 	
 		filterTime = performance.now() - filterStartTime;
@@ -395,7 +396,7 @@ function mainPage(data)
 		//log number of unique visitors
 		uniqueVisitors_ = idData.length;
 		
-		console.log("Unique visitors (from people in area): " + uniqueVisitors_)
+		console.log("Unique visitors (from people in Time): " + uniqueVisitors_)
 		
 		//find all actions of those Id's
 		newData = theData.filter(checkId, idData);
