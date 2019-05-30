@@ -1,0 +1,36 @@
+.header {
+    padding-left: 50px; 
+}
+
+.mainWrapper {
+    background-color: #e3ffdd;
+    padding: 30px; 
+    margin: 30px;
+    margin-top: 0px; 
+    border-radius: 25px;
+    border: solid 2px #8dc181;
+}
+
+.buttons {
+    padding-left: 50px;
+    padding-top: 30px;
+}
+
+.button {
+    background-color: #8dc181;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+
+  .plotwrapper {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
+    //   max-width: 100%;
+    //   overflow: scroll;    
+ }

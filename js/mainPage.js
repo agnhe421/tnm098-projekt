@@ -30,10 +30,8 @@ let xTundraLand = [0, 72], yTundraLand = [56,99];
 
 let time = [OPENING_TIME_FRIDAY.getTime() +  9*3600*1000 , OPENING_TIME_FRIDAY.getTime() + 13*3600*1000 ]; 
 
-xCoordList = xKids;
+xCoordList = time;
 yCoordList = yKids;
-
-
 
 
 var color1 = d3.scaleLinear().domain(1402034400000,1402091999000).range("#ede0e8", "#b30000");
@@ -56,8 +54,8 @@ function mainPage(data)
 
     /***** SET MARGINS ******/
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 900 - margin.left - margin.right,
-        height = 900 - margin.top - margin.bottom;
+        width = 500 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
     /*** SET THE RANGE ******/
     var x = d3.scaleLinear().range([0, width]);
@@ -68,8 +66,9 @@ function mainPage(data)
     x.domain([0, d3.max(data, function(d) { return d.X; })]);
 	y.domain([0, d3.max(data, function(d) { return d.Y; })]);
 
-    /***** CREATE THE BODY ********/
-    var svg = d3.select("body").append("svg")
+	/***** CREATE THE BODY ********/
+	
+    var svg = d3.select("#movementPlot").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
