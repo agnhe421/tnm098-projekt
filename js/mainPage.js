@@ -50,7 +50,6 @@ var color6 = d3.scaleLinear().domain(1402034400000, 1402091999000).range("#eeeec
 function mainPage(data)
 {
     this.data = data;
-    var div = '#mainVis';
 
     /***** SET MARGINS ******/
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
@@ -181,7 +180,7 @@ function mainPage(data)
 
         //stop timer
         let sortingTime = performance.now() - sortStartTime;
-        console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
+        // console.log("Sorting done. Sorted in " + sortingTime + "ms."); //after
 
 
         /***** FORMAT THE DATA ******/
@@ -196,12 +195,12 @@ function mainPage(data)
 
         //stop timer
         let parsingTime = performance.now() - parseStartTime;
-        console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
+        // console.log("Parsing done. Parsed in " + parsingTime + "ms."); //after
 
 
         /***** FIND GROUP ******/
         //start timer
-        console.log("Looking for group...");
+        // console.log("Looking for group...");
         let searchStartTime = performance.now();
 
         //find people that has performed an action at a certain position and time
@@ -210,20 +209,20 @@ function mainPage(data)
 	
 		var newData = peopleInArea(data, xCoords, yCoords);
 		/*var newData2 = peopleTime(data, xCoords, yCoords); */
-		console.log("newData:");
-		console.log(newData);
+		// console.log("newData:");
+		// console.log(newData);
 		
 		searchingTime = performance.now() - searchStartTime;
-        console.log("Searched in " + searchingTime + " milliseconds.");
+        // console.log("Searched in " + searchingTime + " milliseconds.");
 		
-		console.log("Filtering...");
+		// console.log("Filtering...");
 		let filterStartTime = performance.now();
 		
 
 		var newData1 = pruneData(newData, xCoords, yCoords);
 	
 		filterTime = performance.now() - filterStartTime;
-        console.log("Filtered in " + filterTime + " milliseconds.");
+        // console.log("Filtered in " + filterTime + " milliseconds.");
         
 
         return newData1;
