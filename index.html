@@ -14,23 +14,31 @@
         <h2>VAST mini-challenge </h2>
     </div>
     <div class="buttons">
-        <button class="button" onclick="updatePieChart(data11); update(data1)">Friday</button>
-        <button class="button" value="saturday" onclick="mainPage.loadSat()">Saturday</button>
-        <button class="button" onclick="updatePieChart(data22); update(data1)">Sunday</button>
+        <button class="button" onclick="updatePieChart(groupSizesFriday); update(data1)">Friday</button>
+        <button class="button" value="saturday"
+            onclick="mainPage.loadSat(); updatePieChart(groupSizesSaturday)">Saturday</button>
+        <button class="button" onclick="updatePieChart(groupSizesSunday); update(data1)">Sunday</button>
     </div>
     <div class="mainWrapper">
 
         <div class=plotwrapper>
-            <div class="image"><img src="ParkMap.jpg" width="500"></div>
-            <div id="movementPlot"></div>
+            <div class="innerPlotWrapper">
+                <div class="image"><img src="ParkMap.jpg" width="500"></div>
+            </div>
+            <div class="innerPlotWrapper">
+                <div id="movementPlot"></div>
+            </div>
         </div>
         <div class=plotwrapper>
-            <div>
+            <div class="innerPlotWrapper">
                 <h3>Groups </h3>
                 <div id="pieChart"></div>
             </div>
-            <div class="barPlotWrapper">
+            <div class="innerPlotWrapper">
+                    <h3>Something fun, maybe other plot </h3>
+
                 <div id="barPlot"></div>
+            </div>
             </div>
         </div>
 
