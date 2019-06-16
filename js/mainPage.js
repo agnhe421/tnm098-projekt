@@ -162,7 +162,7 @@ function mainPage(data)
     svg.append("g")
         .call(d3.axisLeft(y));
 
-    console.log("DONE.");
+    // console.log("DONE.");
 
 
     //handle the data
@@ -170,7 +170,7 @@ function mainPage(data)
 	{
         /***** SORT DATA BY ID ******/
         //start timer
-        console.log("Sorting...");
+        // console.log("Sorting...");
         let sortStartTime = performance.now();
 
         //sort data accoring to id
@@ -239,11 +239,11 @@ function mainPage(data)
 	
 	function updatePlot(data)
 	{
-		console.log("Clearing plot...");
+		// console.log("Clearing plot...");
 		svg.selectAll("circle").remove();
-		console.log("Clearing done.");
+		// console.log("Clearing done.");
 		
-		console.log("Drawing...");
+		// console.log("Drawing...");
 		svg.selectAll("dot")
 			.data(data)
 			//.data(data.filter(checkId, list) )
@@ -269,7 +269,7 @@ function mainPage(data)
 					
 				}
 			});
-			console.log("Drawing done.");
+			// console.log("Drawing done.");
 	}
 	
 	this.loadSat = function()
@@ -278,15 +278,15 @@ function mainPage(data)
 		var startLoad = performance.now();
 
         var newData = [];
-		console.log("Loading saturday..."); 
-		d3.csv('./data/dataSmallSat.csv', function(data) {
+		// console.log("Loading saturday..."); 
+		d3.csv('./data/saturday.csv', function(data) {
 
 		newData = handleData(data, xCoordList, yCoordList);
 
 		updatePlot(newData);
 
 		var loadingTime = performance.now() - startLoad;
-		console.log("Loaded data of size " +data.length + " in " + loadingTime +" milliseconds." );
+		// console.log("Loaded data of size " +data.length + " in " + loadingTime +" milliseconds." );
 		
 
 		}); 
@@ -365,7 +365,7 @@ function mainPage(data)
 		//log number of unique visitors
 		uniqueVisitors_ = idData.length;
 		
-		console.log("Unique visitors (from people in area): " + uniqueVisitors_)
+		// console.log("Unique visitors (from people in area): " + uniqueVisitors_)
 		
 		//find all actions of those Id's
 		newData = theData.filter(checkId, idData);
@@ -394,7 +394,7 @@ function mainPage(data)
 		//log number of unique visitors
 		uniqueVisitors_ = idData.length;
 		
-		console.log("Unique visitors (from people in Time): " + uniqueVisitors_)
+		// console.log("Unique visitors (from people in Time): " + uniqueVisitors_)
 		
 		//find all actions of those Id's
 		newData = theData.filter(checkId, idData);
@@ -415,17 +415,17 @@ function mainPage(data)
 		//find all ids to delete
 		idsToPrune = idsOutsideRange(list, xCoordList, yCoordList);
 
-		console.log("ids to prune: "+ idsToPrune.length); 
+		// console.log("ids to prune: "+ idsToPrune.length); 
 		
 		//subtract deleted visitors from counter
 		uniqueVisitors_ = uniqueVisitors_ - idsToPrune.length;
-		console.log("Unique visitors in group: " + uniqueVisitors_);
+		// console.log("Unique visitors in group: " + uniqueVisitors_);
 		
 		
 		//check this
 		newList = list.filter( deleteId, idsToPrune );
 		
-		console.log("new list: " + newList.length); 
+		// console.log("new list: " + newList.length); 
 		return newList;
 		
 	}
@@ -638,14 +638,14 @@ function mainPage(data)
 		{
 			if( checkAction(dataPoint["type"])&& checkPosition(dataPoint["X"], xCoords[0])
 				&& checkPosition(dataPoint["Y"], yCoords[0]) ){
-					console.log( "Added (" + dataPoint["X"] +  ", " + dataPoint["Y"] + ").");
+					// console.log( "Added (" + dataPoint["X"] +  ", " + dataPoint["Y"] + ").");
 					newData.push(dataPoint);
 			}
 		});
 
 		//find all actions of an Id
 		newData = theData.filter(checkId, newData);
-		console.log(newData);
+		// console.log(newData);
 
 		//if last coords: return
 		if( xCoords.length == 1){
