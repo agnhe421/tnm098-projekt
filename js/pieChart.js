@@ -9,13 +9,6 @@ function pieChart(test) {
 }
 
 console.warn('initializing piechart')
-    //Note to self:
-    //Det fungerar inte att byta dataset av någon anlednign - Fixa det
-    //Koppla knapparna för pie-chartet till de stora knapparna för dagarna
-    //Se till så att datan kommer från faktisk data och inte hårdkodat i componenten
-    //Bestäm vad som ska visas i bar-charten längst ner till höger 
-    //Koppla knapparna för bar-charten till de stora kanpparna för dagarna
-    //Generera faktisk data 
 
 // append the svg object to the div called 'my_dataviz'
 var svg = d3.select("#pieChart")
