@@ -186,8 +186,8 @@ function mainPage(data) {
 	}
 
 	function peopleInArea(theData, theXRange, theYRange) {
-		const idData = [];
-		const newData = [];
+		let idData = [];
+		let newData = [];
 
 		theData.forEach(function (dataPoint) {
 			if (!idData.includes(dataPoint["id"])
