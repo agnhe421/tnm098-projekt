@@ -76,10 +76,10 @@ svg
   .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
   .style("text-anchor", "middle")
   .style("font-size", 17)
+
 // remove the group that is not present anymore
 u.exit()
 .remove()
-
 }
 
 // Initialize the plot with the first dataset
