@@ -19,7 +19,7 @@ var svg = d3.select("#pieChart")
 // create 2 data_set
 var groupSizesFriday = { alone: 24016, twoToThree: 8532, threeToFour: 6430, moreThanFour: 2721 }
 var groupSizesSaturday = { alone: 52838, twoToThree: 11375, threeToFour: 6168, moreThanFour: 2379 }
-var groupSizesFriday = { alone: 67791, twoToThree: 12841, threeToFour: 6341, moreThanFour: 1882 }
+var groupSizesSunday = { alone: 67791, twoToThree: 12841, threeToFour: 6341, moreThanFour: 1882 }
 
 
 // set the color scale
@@ -32,7 +32,6 @@ var arcGenerator = d3.arc()
   .outerRadius(radius * 1.3);
 // A function that create / update the plot for a given variable:
 function updatePieChart(data) {
-
   // Compute the position of each group on the pie:
   var pie = d3.pie()
     .value(function (d) { return d.value; })
@@ -59,6 +58,8 @@ function updatePieChart(data) {
     .style("stroke-width", "2px")
     .style("opacity", 1)
 
+  d3.selectAll("text").remove();
+  
   svg
     .selectAll('mySlices')
     .data(data_ready)
@@ -72,6 +73,7 @@ function updatePieChart(data) {
   // remove the group that is not present anymore
   u.exit()
     .remove()
+
 }
 // Initialize the plot with the first dataset
 updatePieChart(groupSizesFriday)

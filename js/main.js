@@ -6,7 +6,6 @@ queue()
 var mainPage;
 var pieChart; 
 
-
 function draw(error, data, data2){
     if (error) throw error;
 
@@ -16,5 +15,4 @@ function draw(error, data, data2){
     
     var t1 = performance.now();
     console.log("Call to project " + (t1 - t0) + " milliseconds.");
-
-}
+}$

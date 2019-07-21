@@ -6,7 +6,7 @@
     <title>TNM098</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="index.scss">
+    <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
@@ -14,10 +14,25 @@
         <h2>VAST mini-challenge </h2>
     </div>
     <div class="buttons">
-        <button class="button" onclick="updatePieChart(groupSizesFriday); update(data1)">Friday</button>
-        <button class="button" value="saturday"
-            onclick="mainPage.loadSat(); updatePieChart(groupSizesSaturday)">Saturday</button>
-        <button class="button" onclick="updatePieChart(groupSizesSunday); update(data1)">Sunday</button>
+        <button 
+              class="button" 
+              onclick="
+                updatePieChart(groupSizesFriday);">
+            Friday
+        </button>
+        <button 
+            class="button" 
+            value="saturday"
+            onclick="
+              updatePieChart(groupSizesSaturday);">
+            Saturday
+        </button>
+        <button 
+            class="button" 
+            onclick="
+              updatePieChart(groupSizesSunday);">
+            Sunday
+        </button>
     </div>
     <div class="mainWrapper">
 
@@ -49,7 +64,6 @@
         <script src="./lib/js/queue.js"></script>
         <script src='./js/DBSCAN.js' type='text/javascript'></script>
         <script src='./js/test.js' type='text/javascript'></script>
-        <script src='./js/barPlot.js' type='text/javascript'></script>
         <script src='./js/pieChart.js' type='text/javascript'></script>
         <script src='./js/mainPage.js' type='text/javascript'></script>
         <script src='./js/main.js' type='text/javascript'></script>
