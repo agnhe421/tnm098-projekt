@@ -27,12 +27,11 @@
     margin-bottom: 20px;
     cursor: pointer;
   }
+ .button:focus { background-color:orange; }
 
   .plotwrapper {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
-    //   max-width: 100%;
-    //   overflow: scroll;    
  }
 
  #pieChart {

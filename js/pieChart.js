@@ -17,14 +17,15 @@ var svg = d3.select("#pieChart")
   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 // create 2 data_set
-var groupSizesFriday = { alone: 24016, twoToThree: 8532, threeToFour: 6430, moreThanFour: 2721 }
-var groupSizesSaturday = { alone: 52838, twoToThree: 11375, threeToFour: 6168, moreThanFour: 2379 }
-var groupSizesSunday = { alone: 67791, twoToThree: 12841, threeToFour: 6341, moreThanFour: 1882 }
+var groupSizesFriday = { alone: 24016, two: 17064, three: 12789, four: 8668, five: 5545, six: 3948, seven: 2933, 
+                          eight: 1656, moreThanEight: 2624 }
 
+var groupSizesSaturday = { alone: 52838, two: 22750, three: 12768, four: 7648, five: 4400, six: 3150, seven: 2219,                                eight: 1360, moreThanEight: 3896 }
 
+var groupSizesSunday = { alone: 67791, two: 25682, three: 13566, four: 7276, five: 3915, six: 2010, seven: 1330,                                eight: 832, moreThanEight: 3760 }
 // set the color scale
 var color = d3.scaleOrdinal()
-  .domain(["a", "b", "c", "d", "e", "f"])
+  .domain(["a", "b", "c", "d", "e", "f", "g", "h", "i"])
   .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
 
 var arcGenerator = d3.arc()
@@ -59,7 +60,7 @@ function updatePieChart(data) {
     .style("opacity", 1)
 
   d3.selectAll("text").remove();
-  
+
   svg
     .selectAll('mySlices')
     .data(data_ready)

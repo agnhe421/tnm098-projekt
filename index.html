@@ -16,21 +16,18 @@
     <div class="buttons">
         <button 
               class="button" 
-              onclick="
-                updatePieChart(groupSizesFriday);">
+              onclick="updatePieChart(groupSizesFriday);">
             Friday
         </button>
         <button 
             class="button" 
             value="saturday"
-            onclick="
-              updatePieChart(groupSizesSaturday);">
+            onclick="updatePieChart(groupSizesSaturday);">
             Saturday
         </button>
         <button 
             class="button" 
-            onclick="
-              updatePieChart(groupSizesSunday);">
+            onclick="updatePieChart(groupSizesSunday);">
             Sunday
         </button>
     </div>
@@ -46,12 +43,14 @@
         </div>
         <div class=plotwrapper>
             <div class="innerPlotWrapper">
-                <h3>Groups </h3>
+                <h3>Visitors split up according to the size of the group they where moving in</h3>
                 <div id="pieChart"></div>
             </div>
             <div class="innerPlotWrapper">
-                    <h3>Something fun, a plot of some sort </h3>
-
+                    <h3>Find groups</h3>
+                    <p> - families width kids (groups bigger than 1, only kids are, didn't stay late)
+                            - people who went to see a show (checked in late, didn't go on rides)
+                            -  </p>
                 <!-- <div id="barPlot"></div> -->
             </div>
             </div>
