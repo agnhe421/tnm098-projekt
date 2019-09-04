@@ -32,8 +32,8 @@ var color5 = d3.scaleLinear().domain(1402034400000, 1402091999000).range('#e5dee
 var color6 = d3.scaleLinear().domain(1402034400000, 1402091999000).range('#eeeec3', '#993404'); d3.scaleLinear();
 
 function mainPage(data) {
+	console.warn('hello from main page')
 	this.data = data;
-
 	var margin = { top: 20, right: 20, bottom: 30, left: 50 },
 		width = 500 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
@@ -93,6 +93,13 @@ function mainPage(data) {
 			.attr('cy', function (d) { return y(d.Y); })
 			.style('fill', function (d) {
 				if (d['type'] === checkIn) {
+					console.warn(d.X)
+
+					if(d.X == 86)
+					{ 
+						return '##32a852'
+					}
+
 					return 'red';
 				}
 				return '#ede0e8';

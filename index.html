@@ -16,18 +16,18 @@
     <div class="buttons">
         <button 
               class="button" 
-              onclick="updatePieChart(groupSizesFriday);">
+              onclick="updatePieChart(groupSizesFriday), updateBarPlot(data1);">
             Friday
         </button>
         <button 
             class="button" 
             value="saturday"
-            onclick="updatePieChart(groupSizesSaturday);">
+            onclick="updatePieChart(groupSizesSaturday), updateBarPlot(data2);">
             Saturday
         </button>
         <button 
             class="button" 
-            onclick="updatePieChart(groupSizesSunday);">
+            onclick="updatePieChart(groupSizesSunday), updateBarPlot(data3);">
             Sunday
         </button>
     </div>
@@ -47,16 +47,12 @@
                 <div id="pieChart"></div>
             </div>
             <div class="innerPlotWrapper">
-                    <h3>Find groups</h3>
-                    <p> - families width kids (groups bigger than 1, only kids are, didn't stay late)
-                            - people who went to see a show (checked in late, didn't go on rides)
-                            -  </p>
-                <!-- <div id="barPlot"></div> -->
+                <!-- Create a div where the graph will take place -->
+                <div id="barPlot"></div>
             </div>
             </div>
         </div>
-
-
+        <script src="https://d3js.org/d3.v4.js"></script>
         <script src="./lib/js/jquery.min.js"></script>
         <script src="./lib/js/bootstrap.min.js"></script>
         <script src="./lib/js/d3.min.js"></script>
@@ -64,6 +60,7 @@
         <script src='./js/DBSCAN.js' type='text/javascript'></script>
         <script src='./js/test.js' type='text/javascript'></script>
         <script src='./js/pieChart.js' type='text/javascript'></script>
+        <script src='./js/barPlot.js' type='text/javascript'></script>
         <script src='./js/mainPage.js' type='text/javascript'></script>
         <script src='./js/main.js' type='text/javascript'></script>
 

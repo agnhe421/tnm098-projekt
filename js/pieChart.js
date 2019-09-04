@@ -7,22 +7,24 @@ var radius = Math.min(width, height) / 2 - margin
 function pieChart(test) {
   this.test = test;
 }
-
 // append the svg object to the div called 'my_dataviz'
-var svg = d3.select("#pieChart")
+var svg1 = d3.select("#pieChart")
   .append("svg")
   .attr("width", width)
   .attr("height", height)
   .append("g")
   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+  console.log(svg1)
 // create 2 data_set
 var groupSizesFriday = { alone: 24016, two: 17064, three: 12789, four: 8668, five: 5545, six: 3948, seven: 2933, 
                           eight: 1656, moreThanEight: 2624 }
 
-var groupSizesSaturday = { alone: 52838, two: 22750, three: 12768, four: 7648, five: 4400, six: 3150, seven: 2219,                                eight: 1360, moreThanEight: 3896 }
+var groupSizesSaturday = { alone: 52838, two: 22750, three: 12768, four: 7648, five: 4400, six: 3150, seven: 2219, 
+                        eight: 1360, moreThanEight: 3896 }
 
-var groupSizesSunday = { alone: 67791, two: 25682, three: 13566, four: 7276, five: 3915, six: 2010, seven: 1330,                                eight: 832, moreThanEight: 3760 }
+var groupSizesSunday = { alone: 67791, two: 25682, three: 13566, four: 7276, five: 3915, six: 2010, seven: 1330, 
+                         eight: 832, moreThanEight: 3760 }
 // set the color scale
 var color = d3.scaleOrdinal()
   .domain(["a", "b", "c", "d", "e", "f", "g", "h", "i"])
@@ -40,7 +42,7 @@ function updatePieChart(data) {
   var data_ready = pie(d3.entries(data))
 
   // map to data
-  var u = svg.selectAll("path")
+  var u = svg1.selectAll("path")
     .data(data_ready)
 
   u.enter()
@@ -61,7 +63,7 @@ function updatePieChart(data) {
 
   d3.selectAll("text").remove();
 
-  svg
+  svg1
     .selectAll('mySlices')
     .data(data_ready)
     .enter()
