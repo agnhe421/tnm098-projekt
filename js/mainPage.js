@@ -93,7 +93,6 @@ function mainPage(data) {
 			.attr('cy', function (d) { return y(d.Y); })
 			.style('fill', function (d) {
 				if (d['type'] === checkIn) {
-					console.warn(d.X)
 
 					if(d.X == 86)
 					{ 

@@ -1,19 +1,19 @@
-var data1 = [
-  { group: "Families", value: 4 },
-  { group: "Consert goers", value: 16 },
-  { group: "Loners", value: 8 }
+var fridayNumberOfPeople = [
+  { group: "EarlyBirds", value: 3646 },
+  { group: "MidDayPeople", value: 4000 },
+  { group: "LateNighters", value: 3000 }
 ];
 
-var data2 = [
-  { group: "Families", value: 7 },
-  { group: "Consert goers", value: 1 },
-  { group: "Loners", value: 20 }
+var saturdayNumberOfPeople = [
+  { group: "EarlyBirds", value: 3264 },
+  { group: "MidDayPeople", value: 1 },
+  { group: "LateNighters", value: 20 }
 ];
 
-var data3 = [
-  { group: "Families", value: 7 },
-  { group: "Consert goers", value: 1 },
-  { group: "Loners", value: 20 }
+var sundayNumberOfPeople = [
+  { group: "EarlyBirds", value: 3443 },
+  { group: "MidDayPeople", value: 1 },
+  { group: "LateNighters", value: 20 }
 ];
 
 // set the dimensions and margins of the graph
@@ -32,10 +32,12 @@ var svg2 = d3.select("#barPlot")
 
 // A function that create / update the plot for a given variable:
 function updateBarPlot(data) {
+
+  console.warn(fridayNumberOfPeople)
   //  X axis
   var x = d3.scaleBand()
     .range([0, width])
-    .domain(data1.map(function (d) { return d.group; }))
+    .domain(fridayNumberOfPeople.map(function (d) { return d.group; }))
     .padding(0.2);
   svg2.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -43,7 +45,7 @@ function updateBarPlot(data) {
 
   // Add Y axis
   var y = d3.scaleLinear()
-    .domain([0, 20])
+    .domain([0, 6000])
     .range([height, 0]);
   svg2.append("g")
     .attr("class", "myYaxis")
@@ -65,4 +67,4 @@ function updateBarPlot(data) {
 }
 
 // Initialize the plot with the first dataset
-updateBarPlot(data1)
+updateBarPlot(fridayNumberOfPeople)
