@@ -1,25 +1,25 @@
 var fridayNumberOfPeople = [
-  { group: "EarlyBirds", value: 3646 },
-  { group: "MidDayPeople", value: 4000 },
-  { group: "LateNighters", value: 3000 }
+  { group: "Early Birds", value: 3456 }, //updated
+  { group: "MidDay", value: 3546 }, //updated
+  { group: "Late Nighters", value: 2601 } //updated
 ];
 
 var saturdayNumberOfPeople = [
-  { group: "EarlyBirds", value: 3264 },
-  { group: "MidDayPeople", value: 1 },
-  { group: "LateNighters", value: 20 }
+  { group: "Early Birds", value: 6245 }, //updated
+  { group: "MidDay", value: 6391 },//updated
+  { group: "Late Nighters", value: 4790 } //updated
 ];
 
 var sundayNumberOfPeople = [
-  { group: "EarlyBirds", value: 3443 },
-  { group: "MidDayPeople", value: 1 },
-  { group: "LateNighters", value: 20 }
+  { group: "Early Birds", value: 7477 }, //updated
+  { group: "MidDay", value: 7503 }, //updated
+  { group: "Late Nighters", value: 5406 } //updated
 ];
 
 // set the dimensions and margins of the graph
 var margin = { top: 30, right: 30, bottom: 70, left: 60 },
-  width = 460 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+width = 200,
+height = 200
 
 //  append the svg object to the body of the page
 var svg2 = d3.select("#barPlot")
@@ -45,7 +45,7 @@ function updateBarPlot(data) {
 
   // Add Y axis
   var y = d3.scaleLinear()
-    .domain([0, 6000])
+    .domain([0, 7500])
     .range([height, 0]);
   svg2.append("g")
     .attr("class", "myYaxis")

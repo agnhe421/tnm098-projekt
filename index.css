@@ -29,9 +29,9 @@
   }
  .button:focus { background-color:orange; }
 
-  .plotwrapper {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
+.plotwrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
  }
 
  #pieChart {
@@ -45,4 +45,8 @@
     background-color: white; 
     border-radius: 15px;
     border: solid 2px #8dc181;
+ }
+
+ .image {
+     padding-top: 10%; 
  }

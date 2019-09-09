@@ -1,6 +1,6 @@
-var width = 500
-height = 500
-margin = 100
+var width = 300
+height = 300
+margin = 50
 
 var radius = Math.min(width, height) / 2 - margin
 
