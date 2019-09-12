@@ -15,7 +15,6 @@ var svg1 = d3.select("#pieChart")
   .append("g")
   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-  console.log(svg1)
 // create 2 data_set
 var groupSizesFriday = { alone: 24016, two: 17064, three: 12789, four: 8668, five: 5545, six: 3948, seven: 2933, 
                           eight: 1656, moreThanEight: 2624 }

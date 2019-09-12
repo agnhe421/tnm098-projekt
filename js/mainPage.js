@@ -1,6 +1,8 @@
 
 var uniqueVisitors_ = 0;
-var query = 'Timestamp';
+var query;
+var timeStamp = 'TimeStamp'
+
 const checkIn = 'check-in';
 
 const MINUTE_IN_THRESHOLD = 2;
@@ -32,14 +34,23 @@ var color5 = d3.scaleLinear().domain(1402034400000, 1402091999000).range('#e5dee
 var color6 = d3.scaleLinear().domain(1402034400000, 1402091999000).range('#eeeec3', '#993404'); d3.scaleLinear();
 
 function mainPage(data) {
-	console.warn('hello from main page')
-	this.data = data;
-	var margin = { top: 20, right: 20, bottom: 30, left: 50 },
-		width = 500 - margin.left - margin.right,
-		height = 500 - margin.top - margin.bottom;
+	// console.warn('hello from main page')
+	this.data = data;var margin = { top: 20, right: 20, bottom: 30, left: 50 },
+	width = 500 - margin.left - margin.right,
+	height = 500 - margin.top - margin.bottom;
 
-	var x = d3.scaleLinear().range([0, width]);
-	var y = d3.scaleLinear().range([height, 0]);
+var x = d3.scaleLinear().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+function setDataName(dataName) {
+	let dataPath = './data/dataGroups/morningFriday.csv'
+	// console.log(dataPath)
+	mainPage.loadNewData(dataPath)
+	return dataPath;
+}
+	// this.testFunc = function() {
+	//   console.log('hej från test function')
+	// }
 
 	x.domain([0, d3.max(data, function (d) { return d.X; })]);
 	y.domain([0, d3.max(data, function (d) { return d.Y; })]);
@@ -50,9 +61,6 @@ function mainPage(data) {
 		.append('g')
 		.attr('transform',
 			'translate(' + margin.left + ',' + margin.top + ')');
-
-	const OPENING_TIME_FRIDAY = new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T08:00:00.000Z
-	const CLOSING_TIME_FRIDAY = new Date('2014-06-06T21:59:59.000Z'); //2014-06-06T23:59:59.000Z
 
 	newData = handleData(data, xCoordList, yCoordList);
 	updatePlot(newData);
@@ -70,7 +78,7 @@ function mainPage(data) {
 		});
 
 		data.forEach(function (d) {
-			d.Timestamp = hourParser(d.Timestamp);
+			d[timeStamp] = hourParser(d[timeStamp]);
 		});
 
 		let newData = peopleInArea(data, xCoords, yCoords);
@@ -94,8 +102,7 @@ function mainPage(data) {
 			.style('fill', function (d) {
 				if (d['type'] === checkIn) {
 
-					if(d.X == 86)
-					{ 
+					if (d.X == 86) {
 						return '##32a852'
 					}
 
@@ -105,8 +112,12 @@ function mainPage(data) {
 			});
 	}
 
-	this.loadNewData = function(dataPath) {
+	this.loadNewData = function (dataPath) {
+		// console.warn('LOAD NEW DATA')
+		// console.log(dataPath)
+
 		var newData = [];
+
 		d3.csv(dataPath, function (data) {
 			newData = handleData(data, xCoordList, yCoordList);
 			updatePlot(newData);
@@ -135,7 +146,7 @@ function mainPage(data) {
 		theData.forEach(function (dataPoint) {
 			if (!idData.includes(dataPoint['id'])
 				&& checkAction(dataPoint['type'])
-				&& isInRange(dataPoint, theXRange, theYRange, query)) {
+				&& isInRange(dataPoint, theXRange, theYRange, timeStamp)) {
 
 				idData.push(dataPoint['id']);
 			}
@@ -154,7 +165,7 @@ function mainPage(data) {
 		theData.forEach(function (dataPoint) {
 			if (!idData.includes(dataPoint['id'])
 				&& checkAction(dataPoint['type'])
-				&& isInRange(dataPoint, theXRange, theYRange, query)) {
+				&& isInRange(dataPoint, theXRange, theYRange, timeStamp)) {
 
 				idData.push(dataPoint['id']);
 			}
@@ -180,15 +191,17 @@ function mainPage(data) {
 		if (query === 'area') {
 			if (dataPoint['X'] >= d3.min(xRange) && dataPoint['X'] <= d3.max(xRange)
 				&& dataPoint['Y'] >= d3.min(yRange) && dataPoint['Y'] <= d3.max(yRange))
+				// console.log('is in range')
 				return true;
 		}
 
 		else if (query === 'Timestamp') {
-			if (dataPoint[query].getTime() >= d3.min(xRange) && dataPoint[query].getTime() <= d3.max(xRange))
-				return true;
+			if (dataPoint['Timestamp'] ? dataPoint['Timestamp'].getTime() >= d3.min(xRange) && dataPoint['Timestamp'].getTime() <= d3.max(xRange) : false)
+			// console.log('in range')	
+			return true;
 		}
-
-		else return false;
+		// console.log('out of range')
+		return false;
 	}
 
 	function idsOutsideRange(theList, xRange, yRange) {
@@ -212,7 +225,7 @@ function mainPage(data) {
 
 		if ( /*theData['type'] === 'check-in' 
 			&&*/ theData['X'] === x && theData['Y'] === y
-			&& timeCheck(time, theData['Timestamp'])) //Math.floor((theData['Timestamp']-openingTime)/600000) ===  Math.floor(askedTime/600000))
+			&& timeCheck(time, theData[timeStamp])) //Math.floor((theData['Timestamp']-openingTime)/600000) ===  Math.floor(askedTime/600000))
 		{
 			return true;
 		}
@@ -238,7 +251,7 @@ function mainPage(data) {
 	}
 
 	function checkTime(time, data) {
-		if (time === data['Timestamp'])
+		if (time === data[timeStamp])
 			return true;
 		else return false;
 	}
