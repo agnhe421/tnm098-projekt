@@ -1,62 +1,62 @@
 var fridayNumberOfPeople = [
-  { group: "8-9", value: 3557 },  
-  { group: "9-10", value: 3453 },  
-  { group: "10-11", value: 3456 },  
-  { group: "11-12", value: 3456 },  
-  { group: "12-13", value: 3456 },  
-  { group: "13-14", value: 3456 },  
-  { group: "14-15", value: 3456 },  
-  { group: "15-16", value: 3456 },  
-  { group: "16-17", value: 3456 },  
-  { group: "17-18", value: 3456 },  
-  { group: "18-19", value: 3456 },  
-  { group: "19-20", value: 3456 },  
-  { group: "20-21", value: 3456 },  
-  { group: "21-22", value: 3456 },  
+  { group: "8-9", value: 3557 },
+  { group: "9-10", value: 3453 },
+  { group: "10-11", value: 3456 },
+  { group: "11-12", value: 3456 },
+  { group: "12-13", value: 3456 },
+  { group: "13-14", value: 3456 },
+  { group: "14-15", value: 3456 },
+  { group: "15-16", value: 3456 },
+  { group: "16-17", value: 3456 },
+  { group: "17-18", value: 3456 },
+  { group: "18-19", value: 3456 },
+  { group: "19-20", value: 3456 },
+  { group: "20-21", value: 3456 },
+  { group: "21-22", value: 3456 },
   { group: "22-23", value: 3456 }
 ];
 
 var saturdayNumberOfPeople = [
-  { group: "8-9", value: 3557 },  
-  { group: "9-10", value: 3456 },  
-  { group: "10-11", value: 3456 },  
-  { group: "11-12", value: 3456 },  
-  { group: "12-13", value: 3456 },  
-  { group: "14-14", value: 3456 },  
-  { group: "13-14", value: 3456 },  
-  { group: "14-15", value: 3456 },  
-  { group: "15-16", value: 3456 },  
-  { group: "16-17", value: 3456 },  
-  { group: "17-18", value: 3456 },  
-  { group: "18-19", value: 3456 },  
-  { group: "19-20", value: 3456 },  
-  { group: "20-21", value: 3456 },  
-  { group: "21-22", value: 3456 },  
+  { group: "8-9", value: 3557 },
+  { group: "9-10", value: 3456 },
+  { group: "10-11", value: 3456 },
+  { group: "11-12", value: 3456 },
+  { group: "12-13", value: 3456 },
+  { group: "14-14", value: 3456 },
+  { group: "13-14", value: 3456 },
+  { group: "14-15", value: 3456 },
+  { group: "15-16", value: 3456 },
+  { group: "16-17", value: 3456 },
+  { group: "17-18", value: 3456 },
+  { group: "18-19", value: 3456 },
+  { group: "19-20", value: 3456 },
+  { group: "20-21", value: 3456 },
+  { group: "21-22", value: 3456 },
   { group: "22-23", value: 3456 }
 ];
 
 var sundayNumberOfPeople = [
-  { group: "8-9", value: 3557 },  
-  { group: "9-10", value: 3456 },  
-  { group: "10-11", value: 3456 },  
-  { group: "11-12", value: 3456 },  
-  { group: "12-13", value: 3456 },  
-  { group: "13-14", value: 3456 },  
-  { group: "13-14", value: 3456 },  
-  { group: "14-15", value: 3456 },  
-  { group: "15-16", value: 3456 },  
-  { group: "16-17", value: 3456 },  
-  { group: "17-18", value: 3456 },  
-  { group: "18-19", value: 3456 },  
-  { group: "19-20", value: 3456 },  
-  { group: "20-21", value: 3456 },  
-  { group: "21-22", value: 3456 },  
+  { group: "8-9", value: 3557 },
+  { group: "9-10", value: 3456 },
+  { group: "10-11", value: 3456 },
+  { group: "11-12", value: 3456 },
+  { group: "12-13", value: 3456 },
+  { group: "13-14", value: 3456 },
+  { group: "13-14", value: 3456 },
+  { group: "14-15", value: 3456 },
+  { group: "15-16", value: 3456 },
+  { group: "16-17", value: 3456 },
+  { group: "17-18", value: 3456 },
+  { group: "18-19", value: 3456 },
+  { group: "19-20", value: 3456 },
+  { group: "20-21", value: 3456 },
+  { group: "21-22", value: 3456 },
   { group: "22-23", value: 3456 }
 ];
 
 var barMargin = { top: 30, right: 3, bottom: 70, left: 40 },
-barWidth = 350,
-barHeight = 150
+  barWidth = 350,
+  barHeight = 150
 
 //  append the svg object to the body of the page
 var svg2 = d3.select("#barPlot")
@@ -100,7 +100,21 @@ function updateBarPlot(data) {
     .attr("width", x.bandwidth())
     .attr("height", function (d) { return barHeight - y(d.value); })
     .attr("fill", "#69b3a2")
-}
+    .style('pointer-events', 'all')
 
+  svg2.selectAll('rect')
+    .data(data)
+    .on("mouseover", function () {
+      d3.select(this)
+        .attr("fill", "red");
+    })
+    .on("mouseout", function (d, i) {
+      d3.select(this)
+      .attr("fill", "#69b3a2");
+    });
+}
 // Initialize the plot with the first dataset
 updateBarPlot(fridayNumberOfPeople)
+
+//http://bl.ocks.org/phil-pedruco/9032348 <--- look herer for bar plot mouse over event example
+// https://stackoverflow.com/questions/44495524/d3-transition-not-working-with-events
