@@ -19,8 +19,8 @@ function movementPlot(data) {
 
 
 }
-function setDataPath() {
-  console.warn('hello from movement')
+function setDataPath(dataPath) {
+  console.warn('dataPath: ', dataPath)
 }
 // function movementPlot(data) {
 //     this.data = data;

@@ -115,12 +115,8 @@ function updateBarPlot(data) {
     })
     .on("click", function () {
         console.log('click')
-        setDataPath();
-        // MovementPlot.testPrintFromMovementPlot(); 
+        setDataPath('hejsan');
     });
 }
 // Initialize the plot with the first dataset
 updateBarPlot(fridayNumberOfPeople)
-
-//http://bl.ocks.org/phil-pedruco/9032348 <--- look herer for bar plot mouse over event example
-// https://stackoverflow.com/questions/44495524/d3-transition-not-working-with-events
