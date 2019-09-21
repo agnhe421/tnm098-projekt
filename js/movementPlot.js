@@ -3,35 +3,43 @@ var margin = { top: 10, right: 30, bottom: 30, left: 60 },
   width = 460 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
-// append the svg object to the body of the page
+
+  // append the svg object to the body of the page
 var svg = d3.select("#movement")
-  .append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-  .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+.append("svg")
+.attr("width", width + margin.left + margin.right)
+.attr("height", height + margin.top + margin.bottom)
+.append("g")
+.attr("transform",
+  "translate(" + margin.left + "," + margin.top + ")");
 
 function movementPlot(data) {
-
   this.data = data;
   updateMovementPlot(data)
-
-
 }
-function setDataPath(dataPath) {
-  console.warn('dataPath: ', dataPath)
-}
-// function movementPlot(data) {
-//     this.data = data;
-//     updateMovementPlot(data)
-// }
 
-//   static testPrintFromMovementPlot() {
-//     console.log('printed from movement plot')
-// }
+function setDataPath(group) {
+  console.warn('dataPath: ', group)
+
+  switch (group) {
+    case '16-17':
+      console.log('updating movement plot with new data...')
+      d3.csv('./data/dataGroups/morningFridayCheckIn.csv', function (newData) {
+        updateMovementPlot(newData);
+      });
+      break;
+    case '17-18':
+      console.log('yeay, it works')
+      break;
+    default:
+    // code block
+  }
+}
 
 function updateMovementPlot(data) {
+  console.log('loading...')
+  svg.selectAll("circle").remove();
+
   // Add X axis
   var x = d3.scaleLinear()
     .domain([0, d3.max(data, function (d) { return d.X; })])
@@ -57,4 +65,6 @@ function updateMovementPlot(data) {
     .attr("cy", function (d) { return y(d.Y); })
     .attr("r", 1.5)
     .style("fill", "#69b3a2")
+
+  console.log('finished!')
 }
