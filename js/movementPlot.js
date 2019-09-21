@@ -12,13 +12,24 @@ var svg = d3.select("#movement")
   .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
+function movementPlot(data) {
 
-function movement(data) {
   this.data = data;
-  console.log(data);
+  updateMovementPlot(data)
 
-  updateMovementPlot(data);
+
 }
+function setDataPath() {
+  console.warn('hello from movement')
+}
+// function movementPlot(data) {
+//     this.data = data;
+//     updateMovementPlot(data)
+// }
+
+//   static testPrintFromMovementPlot() {
+//     console.log('printed from movement plot')
+// }
 
 function updateMovementPlot(data) {
   // Add X axis
@@ -47,4 +58,3 @@ function updateMovementPlot(data) {
     .attr("r", 1.5)
     .style("fill", "#69b3a2")
 }
-

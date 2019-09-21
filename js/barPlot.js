@@ -1,3 +1,4 @@
+
 var fridayNumberOfPeople = [
   { group: "8-9", value: 3557 },
   { group: "9-10", value: 3453 },
@@ -111,6 +112,11 @@ function updateBarPlot(data) {
     .on("mouseout", function (d, i) {
       d3.select(this)
       .attr("fill", "#69b3a2");
+    })
+    .on("click", function () {
+        console.log('click')
+        setDataPath();
+        // MovementPlot.testPrintFromMovementPlot(); 
     });
 }
 // Initialize the plot with the first dataset
