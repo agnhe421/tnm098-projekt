@@ -13,6 +13,10 @@ var svg = d3.select("#movement")
 .attr("transform",
   "translate(" + margin.left + "," + margin.top + ")");
 
+let FridayCheckin = "./data/checkin/Friday/FridayCheckIn.csv"; 
+let SaturdayCheckin = "./data/checkin/Saturday/SaturdayCheckIn.csv"; 
+let SundayCheckin = "./data/checkin/Sunday/SundayCheckIn.csv"; 
+
 function movementPlot(data) {
   this.data = data;
   updateMovementPlot(data)
@@ -29,8 +33,10 @@ function setDataPath(group, day) {
 
 }
 
-function filterOnPosition (timeInSeconds) {
-  
+function loadNewDay(day) {
+    d3.csv(day, function (newData) {
+    updateMovementPlot(newData);
+  });
 }
 
 function updateMovementPlot(data) {
