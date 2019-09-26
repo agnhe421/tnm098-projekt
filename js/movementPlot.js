@@ -18,22 +18,19 @@ function movementPlot(data) {
   updateMovementPlot(data)
 }
 
-function setDataPath(group) {
+function setDataPath(group, day) {
   console.warn('dataPath: ', group)
+  console.warn(day)
 
-  switch (group) {
-    case '16-17':
-      console.log('updating movement plot with new data...')
-      d3.csv('./data/dataGroups/morningFridayCheckIn.csv', function (newData) {
-        updateMovementPlot(newData);
-      });
-      break;
-    case '17-18':
-      console.log('yeay, it works')
-      break;
-    default:
-    // code block
-  }
+  console.log('./data/checkIn/' + day + '/' + group +'CheckIn.csv')
+  d3.csv('./data/checkIn/' + day + '/' + group + 'CheckIn.csv', function (newData) {
+    updateMovementPlot(newData);
+  });
+
+}
+
+function filterOnPosition (timeInSeconds) {
+  
 }
 
 function updateMovementPlot(data) {
@@ -42,7 +39,7 @@ function updateMovementPlot(data) {
 
   // Add X axis
   var x = d3.scaleLinear()
-    .domain([0, d3.max(data, function (d) { return d.X; })])
+    .domain([0, 100])
     .range([0, width]);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -50,7 +47,7 @@ function updateMovementPlot(data) {
 
   // Add Y axis
   var y = d3.scaleLinear()
-    .domain([0, d3.max(data, function (d) { return d.Y; })])
+    .domain([0, 100])
     .range([height, 0]);
   svg.append("g")
     .call(d3.axisLeft(y));
@@ -63,7 +60,7 @@ function updateMovementPlot(data) {
     .append("circle")
     .attr("cx", function (d) { return x(d.X); })
     .attr("cy", function (d) { return y(d.Y); })
-    .attr("r", 1.5)
+    .attr("r", 4.0)
     .style("fill", "#69b3a2")
 
   console.log('finished!')
