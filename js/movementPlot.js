@@ -16,7 +16,7 @@ var svg = d3.select("#movement")
 let FridayCheckin = "./data/checkin/Friday/FridayCheckIn.csv";
 let SaturdayCheckin = "./data/checkin/Saturday/SaturdayCheckIn.csv";
 let SundayCheckin = "./data/checkin/Sunday/SundayCheckIn.csv";
-
+let activeDay = "Friday"
 
 function movementPlot(data) {
   this.data = data;
@@ -24,13 +24,8 @@ function movementPlot(data) {
 }
 
 function setDataPath(group, day) {
-  console.warn('dataPath: ', group)
-  console.warn(day)
-
-  console.log('./data/checkIn/' + day + '/' + group + 'CheckIn.csv')
   d3.csv('./data/checkIn/' + day + '/' + group + 'CheckIn.csv', function (newData) {
-
-    checkDensity(newData);
+  checkDensity(newData);
   });
 }
 
@@ -41,7 +36,6 @@ function checkDensity(data) {
   });
 
   updateMovementPlot(result)
-  //return result;
 }
 
 function groupBy(array, f) {
@@ -62,7 +56,6 @@ function addPoint(xVal, yVal, list) {
 
 function updateMovementPlot(data) {
   console.log('loading...')
-  
   svg.selectAll("circle").remove();
 
   // Add X axis
@@ -87,10 +80,10 @@ function updateMovementPlot(data) {
     .enter()
     .append("circle")
     .attr("cx", function (d) { 
-      console.log(d)
       return x(d[0].X); })
     .attr("cy", function (d) { return y(d[0].Y); })
     .attr("r", function (d) { return (2.0 + d.length / 100) })
+    .style("opacity", 0.75)
     .style("fill", "#69b3a2")
 
   console.log('finished!')
@@ -111,10 +104,15 @@ function checkPerformance(foo, argument) {
   return list;
 }
 
-function loadNewDay(day) {
+function loadNewDay(day, dayName) {
   d3.csv(day, function (newData) {
     checkDensity(newData);
-    //updateMovementPlot(newData);
   });
+  activeDay = dayName; 
 }
 
+function loadEntrance(entrance) {
+  d3.csv('./data/coordinates/entrance'+ entrance + activeDay + '.csv', function (newData) {
+    checkDensity(newData);
+  })
+}

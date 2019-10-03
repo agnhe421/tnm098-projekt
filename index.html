@@ -15,16 +15,16 @@
     </div>
     <div class="buttons">
         <button class="button" 
-                onclick="loadNewDay(FridayCheckin), updatePieChart(groupSizesFriday), updateBarPlot(fridayNumberOfPeople);">
+                onclick="loadNewDay(FridayCheckin, 'Friday'), updatePieChart(groupSizesFriday), updateBarPlot(fridayNumberOfPeople);">
             Friday
         </button>
         <button class="button" 
                 value="saturday" 
-                onclick="loadNewDay(SaturdayCheckin), updatePieChart(groupSizesSaturday), updateBarPlot(saturdayNumberOfPeople);">
+                onclick="loadNewDay(SaturdayCheckin, 'Saturday'), updatePieChart(groupSizesSaturday), updateBarPlot(saturdayNumberOfPeople);">
             Saturday
         </button>
         <button class="button" 
-                onclick="loadNewDay(SundayCheckin), updatePieChart(groupSizesSunday), updateBarPlot(sundayNumberOfPeople);">
+                onclick="loadNewDay(SundayCheckin, 'Sunday'), updatePieChart(groupSizesSunday), updateBarPlot(sundayNumberOfPeople);">
             Sunday
         </button>
     </div>
@@ -40,7 +40,11 @@
                 <div id="barPlot"></div>
             </div>
             <div class="innerPlotWrapper">
-                <div class="image"><img src="ParkMap.jpg" width="350"></div>
+                <div class="image"><img src="ParkMap.jpg" width="350">
+                <button onclick="loadEntrance(1)" class="btn1"> 1 </button>
+                <button onclick="loadEntrance(1)" class="btn2"> 2 </button>
+                <button onclick="loadEntrance(1)" class="btn3"> 3 </button>
+                </div>
             </div>
         </div>
         <div class=bigPlotwrapper>

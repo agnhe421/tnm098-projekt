@@ -45,7 +45,44 @@
     background-color: white; 
     border-radius: 15px;
     border: solid 2px #8dc181;
+    /* position: relative; */
  }
+
+ .btn1 {
+    position: absolute;
+    background-color: #69b3a2; 
+    padding: 10px; 
+    border: 2px solid white; 
+    border-radius: 5px;
+    transform: translate(-360px, 100px);
+ }
+ .btn1:hover {
+    background-color: orange;
+  }
+
+  .btn2 {
+    position: absolute;
+    background-color: #69b3a2; 
+    padding: 10px; 
+    border: 2px solid white; 
+    border-radius: 5px;
+    transform: translate(-143px, -29px);
+ }
+ .btn2:hover {
+    background-color: orange;
+  }  
+  
+  .btn3 {
+    position: absolute;
+    background-color: #69b3a2; 
+    padding: 10px; 
+    border: 2px solid white; 
+    border-radius: 5px;
+    transform: translate(-10px, 61px);
+ }
+ .btn3:hover {
+    background-color: orange;
+  }
 
  .image {
      padding-top: 10%; 
