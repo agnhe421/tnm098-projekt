@@ -18,9 +18,19 @@ let SaturdayCheckin = "./data/checkin/Saturday/SaturdayCheckIn.csv"; 
 let SundayCheckin = "./data/checkin/Sunday/SundayCheckIn.csv"; 
 
 
+
 function movementPlot(data) {
   this.data = data;
   checkDensity(data);
+    
+
+
+    /**************************************************************************************************
+     * 
+     *                                                      TEST SECTION
+     * 
+     ***************************************************************************************************/
+    testing(data);
   //updateMovementPlot(list);
 }
 
@@ -102,6 +112,7 @@ function updateMovementPlot(data) {
     .style("fill", "#69b3a2")
 
   console.log('finished!')
+
 }
 
 /**
@@ -116,7 +127,7 @@ function checkPerformance(foo, argument){
     var list = foo(argument);
     
     var t1 = performance.now();
-    console.log("Call to checkDensity took " + (t1 - t0) + " milliseconds.");
+    console.log("Call to " + foo + " took " + (t1 - t0) + " milliseconds.");
 
     return list;
 }
