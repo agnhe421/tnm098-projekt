@@ -18,9 +18,6 @@ function runStats(dataSet){
     
 }
 
-
-
-
 function calcTotalCheckins(dataSet){
     let totalCheckins = 0;
     

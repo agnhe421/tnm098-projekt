@@ -22,6 +22,41 @@ function extractLocation(data, locationList){
 }
 
 
+
+//method for extracting all timestamps in a 
+//returns a list of datapoints
+function extractTimePeriod(dataSet, TimestampStart, TimestampEnd){
+    //delcarations
+    let extractedData = []
+    const HALF_HOUR = 1800000; //there are 1 800 000 milliseconds in a half hour
+    let startTime = comparableTime(TimestampStart) - HALF_HOUR; 
+    let endTime = comparableTime(TimestampEnd) + HALF_HOUR;
+    
+    //extract from dataSet each timestamp between startTime and endTime
+    extractedData = dataSet.filter( (dataPoint) => {
+        //create a comparable date
+        let currentTimestamp = comparableTime(dataPoint.TimeStamp);
+        //return true if within span
+        return (startTime < currentTimestamp && currentTimestamp < endTime);
+    })
+
+    console.log(extractedData);
+   
+}
+
+
+//returns the time in milliseconds for comparison
+function comparableTime(timestamp){
+    //create a new Date to convert
+    let newTime = new Date(timestamp);
+    //convert to milliseconds
+    newTime = newTime.getTime();
+
+    return newTime;
+}
+
+
+
 //hard coded calculations to get data for all attractions, this should really be refactored
 //returns a list of all data for attraction groups
 function extractAllLocations(dataSet){

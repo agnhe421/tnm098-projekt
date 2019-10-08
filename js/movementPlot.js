@@ -61,9 +61,11 @@ function checkDensity(data){
     return [dataPoint.X, dataPoint.Y];
   });
 
-  runStats(result);
+  extractTimePeriod(data, data[9].TimeStamp, data[109].TimeStamp);  
 
-  console.log(attractionList);
+  runStats(result);
+  //console.log(result);
+  //console.log(attractionList);
   //extractLocation(result, _entrances);
   updateMovementPlot(result);
   //return result;
