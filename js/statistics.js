@@ -1,97 +1,156 @@
 
+/**
+ * In checkDensity, run:
+ * runStats(result);
+ * 
+ * 
+ * 
+ */
+
+ //global variable;
+let _totalCheckinsPark = 0;
+let attractionList = [];
+
+//this is based on the checkin data and therefore misses the once who only walk around
+//Unless the data set with unique visitors is  read.
+function runStats(dataSet){
+    attractionList = extractAllLocations(dataSet);
+    
+}
+
+
+
+
+function calcTotalCheckins(dataSet){
+    let totalCheckins = 0;
+    
+    //recurringly add the length of each member to the total
+    totalCheckins = dataSet.reduce( (currentTotal, nrCheckins ) => {
+        return nrCheckins.length + currentTotal;
+    },0 );
+
+    return (totalCheckins);
+}
+
+function getUniqueVisitors(data){
+    const uniqueVisitors = [...new Set(data.map(person => person.id))];
+ 
+    return uniqueVisitors;
+}
+
+
+
+//not used anymore, save if we use it later
+function removeExtracted(data, idx){
+    //need to start with removing last object
+    
+    idx.forEach( index => {
+        let n = idx.length-index-1; //erase from the back
+        //console.log(n);
+        data.splice(n, 1);
+    })
+    return data;
+}
+
+
+
+
+//will return unique ids from movementData who are not in checkinData, 
+function findWalkers(movementData, checkinData) {
+    let walkers = [];
+
+    //get the unique ids of the movers and the checkers
+    let uniqueMovers = getUniqueVisitors(movementData);
+    let uniqueCheckers = getUniqueVisitors(checkinData);
+
+    //the difference is everyone who is in the movement data but has not checked in
+    walkers = movementData.filter(x => !checkinData.includes(x));
+
+    console.log (walkers);
+}
+/****************************************************************************************
+ * 
+ * 
+ *                              AUXILLARY FUNCTIONS
+ * 
+ * 
+ ***************************************************************************************/
+
+
+function intersectionGroup(SetA, SetB){
+    let intersection = [];
+
+    intersection = SetA.filter( x => { 
+        return (SetB.includes(x))
+    });
+    return intersection;    
+}
+
+//returns the elements of Set A that is not in Set B
+function differenceGroup(SetA, SetB){
+    let difference = [];
+
+    difference = SetA.filter( (x) => { 
+        return ( !SetB.includes(x) )
+    })
+
+    return (difference);
+}
+
+
+function compareId(dataPointA, dataPointB){
+    
+    const idA = Number(dataPointA.id);
+    const idB = Number(dataPointB.id);
+
+    return (idA-idB);
+}
+
+function compareLocation(locationA, locationB ){
+    return ( Number(locationA.X) == Number(locationB.X) 
+             && Number(locationA.Y) == Number(locationB.Y) )
+}
+
 
 function timeAtAttraction (person, data) {
-    let checkinAtX = person.X;
-    let checkinAtY = person.Y;
     let checkinTime = person.TimeStamp;
     let checkOutTime = 0;
-
     
-
-    console.log("legnth of data: " + data.length)
-    //find index of that action
+    //define parser, should be done globally? 
+    let hourParser = d3.timeParse('%Y-%m-%d %H:%M:%S');
+    
+    //find index of the searched timestamp
     let timestampIdx = data.findIndex(x => {
-        //console.log(x.TimeStamp);
         return (x.Timestamp === checkinTime)
-    })
-    /*
-    new Date('2014-06-06T06:00:00.000Z'); //2014-06-06T07:10:52.000Z
-    var hourParser = d3.timeParse('%Y-%m-%d %H:%M:%S');*/
-
-    new Date(checkinTime); //2014-06-06T07:10:52.000Z
-    var hourParser = d3.timeParse('%Y-%m-%d %H:%M:%S');
-    checkinTime = hourParser(checkinTime);
-    checkOutTime = data[timestampIdx+1].Timestamp;
-    checkOutTime = hourParser(checkOutTime);
-
-    console.log(checkinTime);
-    //create a sublist of all actions after current timestamp
-    /*let personActions = data.slice(timestampIdx+1);
-
-    console.log(personActions);
-/*
-    for( let i = 0 ; i < personActions.length ; i++){
-        if(personActions[i].X === checkinAtX && personActions[i].Y === checkinAtY){
-            checkOutTime = personActions[i].timestamp;
-        }
-        console.log("No actions found");
-    }
-    */
-
-    console.log( (checkOutTime - checkinTime)/1000)
-
-
-
-    /* vad vill jag göra?
-
-    sortera ut alla personens händelser från tidpunkt x till nästa .
-    Hitta nästa tidpunkt som överensensträmmer med samma plats. 
-
-    Hitta från en sublista som är utdragen från det aktuella timestampen? */
-}
-
-function testing (data) {
-    let dataPoint = data[26529];
-    let actionList = [];
-    
-    let checkinTime = dataPoint.TimeStamp;
-    //console.log("CheckinTime: " + checkinTime);
-    let timestampIdx = data.findIndex(x => {
-        
-        return (x.TimeStamp === checkinTime)
-    })
-    //console.log(timestampIdx);
-    //console.log(data[timestampIdx]);
-    //console.log(dataPoint);
-    
-    //console.log("Searched Person: " );
-    //console.log(dataPoint);
-    //console.log(data);
-    d3.csv('./data/newData/' + 'friday.csv', function (largeData) {
-        
-        largeData = largeData.filter( person => person.id === dataPoint.id);
-        timeAtAttraction(dataPoint, largeData);
     });
 
-
-    
-    
-    //let actionList = extractActions(datapoint);
+    //the first movement after the attraction
+    checkOutTime = data[timestampIdx+1].Timestamp;
     
 
-    //console.log(actionList);
-    
+    //parse the strings to be able to count seconds.
+    checkinTime = hourParser(checkinTime);
+    checkOutTime = hourParser(checkOutTime);
+
+    //divide by 1000 to get in seconds (time in miliseconds)
+    console.log( (checkOutTime - checkinTime)/1000)
 }
-
-// function extractActions(datapoint){
-//     let actionList = []
-//     d3.csv('./data/newData/' + 'friday.csv', function (largeData) {
+/****************************************************************************************
+ * 
+ * 
+ *                              TEST SECTION
+ * 
+ * 
+ ***************************************************************************************/
+function testing (data) {
+    //generic datapoint
+    let dataPoint = data[26529];
     
-//         actionList = largeData.filter( person => person.id === datapoint.id)
-        
-        
-//      });
-//      console.log(actionList);
-//      return actionList;
+    //extract all movements of datapoint
+    d3.csv('./data/newData/' + 'friday.csv', function (largeData) {
+        largeData = largeData.filter( person => person.id === dataPoint.id);
 
-// }
+        //send that list to check timeAtAttraction
+        timeAtAttraction(dataPoint, largeData);
+    });
+}

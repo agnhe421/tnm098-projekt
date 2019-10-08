@@ -30,7 +30,8 @@ function movementPlot(data) {
      *                                                      TEST SECTION
      * 
      ***************************************************************************************************/
-    testing(data);
+    //let someList = checkPerformance (getUniqueVisitors, data);
+    //console.log(someList);
   //updateMovementPlot(list);
 }
 
@@ -40,43 +41,58 @@ function setDataPath(group, day) {
 
   console.log('./data/checkIn/' + day + '/' + group +'CheckIn.csv')
   d3.csv('./data/checkIn/' + day + '/' + group + 'CheckIn.csv', function (newData) {
-    
-    
     checkDensity(newData);
-    //updateMovementPlotgit (list);
+    //updateMovementPlot (list);
     
     //var list = checkPerformance( checkDensity, newData) ;
   });
 }
 
 function checkDensity(data){
-  //only runs groupBy, could be refactored away.
-  var result = groupBy(data, function(dataPoint)
+  let totalCheckins = 0;
+  totalCheckins = data.length;
+
+  //set global variable
+  _totalCheckinsPark = totalCheckins; 
+  
+  //only runs groupBy, could be refactored out.
+  let result = groupBy(data, function(dataPoint)
   {
     return [dataPoint.X, dataPoint.Y];
   });
-  
-  
-  updateMovementPlot(result)
+
+  runStats(result);
+
+  console.log(attractionList);
+  //extractLocation(result, _entrances);
+  updateMovementPlot(result);
   //return result;
 }
 
 function groupBy( array , f )
-  {
+{
     var groups = {};
-    array.forEach( function( o )
+   
+    //for datapoint in array
+    array.forEach( function( datapoint )
     {
-      var group = JSON.stringify( f(o) );
-      groups[group] = groups[group] || [];
-      groups[group].push( o );  
+      //= ["X,Y"]
+      var group = JSON.stringify( f(datapoint) );
+
+      //if groups[X,Y] does not exist create empty group
+      groups[group] = groups[group] || [];
+
+      //push datapoint to group
+      groups[group].push( datapoint );  
     });
+
     return Object.keys(groups).map( function( group )
     {
       return groups[group]; 
     })
-  }
+}
 
-
+//is not being used anymore?
 function addPoint(xVal, yVal, list){
   list.push( {id: String(xVal + yVal), nrCheckIns: 1} );
 }
@@ -122,12 +138,15 @@ function updateMovementPlot(data) {
  * @param {string} argument Arguments of function f.
  */
 function checkPerformance(foo, argument){
-  var t0 = performance.now();
+    let t0 = performance.now();
     
-    var list = foo(argument);
+    let list = foo(argument);
     
-    var t1 = performance.now();
-    console.log("Call to " + foo + " took " + (t1 - t0) + " milliseconds.");
+    let t1 = performance.now();
+
+    let timeElapsed = (t1-t0).toPrecision(4);
+
+    console.log("Call to function" + " took " + timeElapsed + " milliseconds.");
 
     return list;
 }
