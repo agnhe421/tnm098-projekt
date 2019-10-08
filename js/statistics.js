@@ -124,7 +124,6 @@ function timeAtAttraction (person, data) {
     //the first movement after the attraction
     checkOutTime = data[timestampIdx+1].Timestamp;
     
-
     //parse the strings to be able to count seconds.
     checkinTime = hourParser(checkinTime);
     checkOutTime = hourParser(checkOutTime);

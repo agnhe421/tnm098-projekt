@@ -1,4 +1,8 @@
-
+const inMilliSeconds = {
+    QUARTER_HOUR: 900000,
+    HALF_HOUR: 1800000,
+    HOUR: 3600000
+}
 //method to extract all locations of a specific type from a dataSet which is grouped by coordinates
 function extractLocation(data, locationList){
     let toExtract = [];
@@ -28,9 +32,8 @@ function extractLocation(data, locationList){
 function extractTimePeriod(dataSet, TimestampStart, TimestampEnd){
     //delcarations
     let extractedData = []
-    const HALF_HOUR = 1800000; //there are 1 800 000 milliseconds in a half hour
-    let startTime = comparableTime(TimestampStart) - HALF_HOUR; 
-    let endTime = comparableTime(TimestampEnd) + HALF_HOUR;
+    let startTime = comparableTime(TimestampStart) - inMilliSeconds.HALF_HOUR; 
+    let endTime = comparableTime(TimestampEnd) + inMilliSeconds.HALF_HOUR;
     
     //extract from dataSet each timestamp between startTime and endTime
     extractedData = dataSet.filter( (dataPoint) => {
