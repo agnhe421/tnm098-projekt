@@ -18,10 +18,14 @@ var svgAttractions = d3.select("#attractionsPlot")
     "translate(" + barMargin.left + "," + barMargin.top + ")");
 
 function updateAttractionsPlot(data) {
+// svgAttractions.selectAll("yaxis").remove(); 
+// svgAttractions.selectAll("rect").remove(); 
+d3.selectAll("svgAttractions").remove();
+
   var x = d3.scaleBand()
     .range([0, barWidth])
     .domain(data.map(function (d) { 
-       return d.checkins; 
+       return d.name; 
      }))
     .padding(0.2);
   svgAttractions.append("g")
@@ -45,13 +49,11 @@ function updateAttractionsPlot(data) {
     .merge(bar)
     .transition()
     .duration(1000)
-    .attr("x", function (d) { return x(d.checkins); })
+    .attr("x", function (d) { return x(d.name); })
     .attr("y", function (d) { return y(d.checkins); })
     .attr("width", x.bandwidth())
     .attr("height", function (d) { return barHeight - y(d.checkins);})
     .attr("fill", "#69b3a2")
     .style('pointer-events', 'all')
 }
-// Initialize the plot with the first dataset
-// updateAttractionsPlot(fridayNumberOfPeople)
 
