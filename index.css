@@ -1,12 +1,12 @@
 .header {
-    padding-left: 50px; 
+    padding-left: 50px;
 }
 
 .mainWrapper {
-    background-color: #fff7fd; 
-    padding: 30px; 
+    background-color: #fff7fd;
+    padding: 30px;
     margin: 30px;
-    margin-top: 0px; 
+    margin-top: 0px;
     border-radius: 25px;
     border: solid 2px #8dc181;
 }
@@ -35,24 +35,36 @@
  }
 
  #pieChart {
-     padding: 0px; 
+     padding: 0px;
  }
 
  .innerPlotWrapper {
-     margin: 10px; 
-     padding: 10px; 
-    text-align: center; 
-    background-color: white; 
+     margin: 10px;
+     padding: 10px;
+    /* text-align: center;  */
+    background-color: white;
     border-radius: 15px;
     border: solid 2px #8dc181;
-    /* position: relative; */
+    position: relative;
  }
+ .bigPlotwrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
 
+ }
+ .checkins {
+     padding: 5px; 
+    text-align: center;
+ }
+ .attractions {
+    padding: 5px; 
+    text-align: center;
+ }
  .btn1 {
     position: absolute;
-    background-color: #69b3a2; 
-    padding: 10px; 
-    border: 2px solid white; 
+    background-color: #69b3a2;
+    padding: 10px;
+    border: 2px solid white;
     border-radius: 5px;
     transform: translate(-360px, 100px);
  }
@@ -62,21 +74,21 @@
 
   .btn2 {
     position: absolute;
-    background-color: #69b3a2; 
-    padding: 10px; 
-    border: 2px solid white; 
+    background-color: #69b3a2;
+    padding: 10px;
+    border: 2px solid white;
     border-radius: 5px;
     transform: translate(-143px, -29px);
  }
  .btn2:hover {
     background-color: orange;
-  }  
-  
+  }
+
   .btn3 {
     position: absolute;
-    background-color: #69b3a2; 
-    padding: 10px; 
-    border: 2px solid white; 
+    background-color: #69b3a2;
+    padding: 10px;
+    border: 2px solid white;
     border-radius: 5px;
     transform: translate(-10px, 61px);
  }
@@ -85,5 +97,5 @@
   }
 
  .image {
-     padding-top: 10%; 
+     padding-top: 10%;
  }

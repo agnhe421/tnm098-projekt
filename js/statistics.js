@@ -15,7 +15,8 @@ let attractionList = [];
 //Unless the data set with unique visitors is  read.
 function runStats(dataSet){
     attractionList = extractAllLocations(dataSet);
-    console.log(attractionList)
+    attractionsPlot(attractionList)
+    // console.log(attractionList)
 }
 
 function calcTotalCheckins(dataSet){
@@ -37,8 +38,6 @@ function getUniqueVisitors(data){
     return uniqueVisitors;
 }
 
-
-
 //not used anymore, save if we use it later
 function removeExtracted(data, idx){
     //need to start with removing last object
@@ -50,9 +49,6 @@ function removeExtracted(data, idx){
     })
     return data;
 }
-
-
-
 
 //will return unique ids from movementData who are not in checkinData, 
 function findWalkers(movementData, checkinData) {
