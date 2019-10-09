@@ -18,7 +18,6 @@ var svgAttractions = d3.select("#attractionsPlot")
     "translate(" + barMargin.left + "," + barMargin.top + ")");
 
 function updateAttractionsPlot(data) {
-svgAttractions.selectAll("rect").remove(); 
 
   var x = d3.scaleBand()
     .range([0, barWidth])
@@ -32,7 +31,7 @@ svgAttractions.selectAll("rect").remove();
 
   // Add Y axis
   var y = d3.scaleLinear()
-    .domain([0, 70])
+    .domain([0, 60])
     .range([barHeight, 0]);
 
     svgAttractions.append("g")
