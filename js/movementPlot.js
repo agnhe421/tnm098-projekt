@@ -36,6 +36,7 @@ function checkDensity(data) {
   });
 
   updateMovementPlot(result)
+  runStats(result);
 }
 
 function groupBy(array, f) {
@@ -85,8 +86,6 @@ function updateMovementPlot(data) {
     .attr("r", function (d) { return (2.0 + d.length / 100) })
     .style("opacity", 0.75)
     .style("fill", "#69b3a2")
-
-  console.log('finished!')
 }
 
 /**

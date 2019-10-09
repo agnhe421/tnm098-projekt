@@ -4,7 +4,6 @@ let entrances = [{mapId: 90, coords: { X: 63, Y: 99 } },
                  {mapId: 92, coords: {X: 0, Y: 67} }
             ];
 
-
 //food & drinks
 let food = [{mapId: 35, coords: {X: 59, Y: 46} }, 
             {mapId: 36, coords: {X: 35, Y: 15 } }, 
@@ -69,4 +68,6 @@ let pavillion = [{mapId: 32, coords: {X: 32, Y: 33}}];
 let info = [{mapId: 60, coords: {X: 68, Y: 91}}];
 
 let medic = [{mapId: 62, coords: {X: 50, Y: 57}}];
+let other = []
 
+let allAttractionList = [entrances, thrillRides, kiddieRides, ridesForEveryone, medic, pavillion, other];
