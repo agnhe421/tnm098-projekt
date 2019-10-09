@@ -55,13 +55,13 @@ var sundayNumberOfPeople = [
 
 var barMargin = { top: 30, right: 3, bottom: 70, left: 40 },
   barWidth = 350,
-  barHeight = 150
+  barHeightAttractions = 150
 
 //  append the svg object to the body of the page
 var svg2 = d3.select("#barPlot")
   .append("svg")
   .attr("width", barWidth + barMargin.left + barMargin.right)
-  .attr("height", barHeight + barMargin.top + barMargin.bottom)
+  .attr("height", barHeightAttractions + barMargin.top + barMargin.bottom)
   .append("g")
   .attr("transform",
     "translate(" + barMargin.left + "," + barMargin.top + ")");
@@ -73,13 +73,13 @@ function updateBarPlot(data) {
     .domain(fridayNumberOfPeople.map(function (d) { return d.group; }))
     .padding(0.2);
   svg2.append("g")
-    .attr("transform", "translate(0," + barHeight + ")")
+    .attr("transform", "translate(0," + barHeightAttractions + ")")
     .call(d3.axisBottom(x))
 
   // Add Y axis
   var y = d3.scaleLinear()
     .domain([0, 7000])
-    .range([barHeight, 0]);
+    .range([barHeightAttractions, 0]);
 
   svg2.append("g")
     .attr("class", "myYaxis")
@@ -96,7 +96,7 @@ function updateBarPlot(data) {
     .attr("x", function (d) { return x(d.group); })
     .attr("y", function (d) { return y(d.value); })
     .attr("width", x.bandwidth())
-    .attr("height", function (d) { return barHeight - y(d.value); })
+    .attr("height", function (d) { return barHeightAttractions - y(d.value); })
     .attr("fill", "#69b3a2")
     .style('pointer-events', 'all')
 
