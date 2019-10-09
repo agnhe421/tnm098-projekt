@@ -3,7 +3,6 @@ var margin = { top: 10, right: 30, bottom: 30, left: 60 },
   width = 460 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
-
 // append the svg object to the body of the page
 var svg = d3.select("#movement")
   .append("svg")
@@ -30,13 +29,17 @@ function setDataPath(group, day) {
 }
 
 function checkDensity(data) {
+  let totalCheckins = 0;
+  totalCheckins = data.length;
+  //set global variable, this is used in calculating the percentage of the rides.
+  _totalCheckinsPark = totalCheckins; 
+
   //only runs groupBy, could be refactored away.
   var result = groupBy(data, function (dataPoint) {
     return [dataPoint.X, dataPoint.Y];
   });
-
-  updateMovementPlot(result)
   runStats(result);
+  updateMovementPlot(result)
 }
 
 function groupBy(array, f) {
@@ -58,7 +61,9 @@ function addPoint(xVal, yVal, list) {
 function updateMovementPlot(data) {
   console.log('loading...')
   svg.selectAll("circle").remove();
-
+  // svg.select(".x").remove(); 
+  // svg.select(".y").remove(); 
+	svg.select("svgAttractions").remove();
   // Add X axis
   var x = d3.scaleLinear()
     .domain([0, 100])

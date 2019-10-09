@@ -18,9 +18,7 @@ var svgAttractions = d3.select("#attractionsPlot")
     "translate(" + barMargin.left + "," + barMargin.top + ")");
 
 function updateAttractionsPlot(data) {
-// svgAttractions.selectAll("yaxis").remove(); 
-// svgAttractions.selectAll("rect").remove(); 
-d3.selectAll("svgAttractions").remove();
+svgAttractions.selectAll("rect").remove(); 
 
   var x = d3.scaleBand()
     .range([0, barWidth])
@@ -34,7 +32,7 @@ d3.selectAll("svgAttractions").remove();
 
   // Add Y axis
   var y = d3.scaleLinear()
-    .domain([0, d3.max(data, function(d) { return d.checkins; })])
+    .domain([0, 70])
     .range([barHeight, 0]);
 
     svgAttractions.append("g")
@@ -50,9 +48,9 @@ d3.selectAll("svgAttractions").remove();
     .transition()
     .duration(1000)
     .attr("x", function (d) { return x(d.name); })
-    .attr("y", function (d) { return y(d.checkins); })
+    .attr("y", function (d) { return y(d.ratio); })
     .attr("width", x.bandwidth())
-    .attr("height", function (d) { return barHeight - y(d.checkins);})
+    .attr("height", function (d) { return barHeight - y(d.ratio);})
     .attr("fill", "#69b3a2")
     .style('pointer-events', 'all')
 }

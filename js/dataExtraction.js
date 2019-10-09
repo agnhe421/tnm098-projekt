@@ -25,8 +25,6 @@ function extractLocation(data, locationList){
     return toExtract;
 }
 
-
-
 //method for extracting all timestamps in a 
 //returns a list of datapoints
 function extractTimePeriod(dataSet, TimestampStart, TimestampEnd){
@@ -43,10 +41,8 @@ function extractTimePeriod(dataSet, TimestampStart, TimestampEnd){
         return (startTime < currentTimestamp && currentTimestamp < endTime);
     })
 
-    console.log(extractedData);
-   
+    console.log(extractedData);  
 }
-
 
 //returns the time in milliseconds for comparison
 function comparableTime(timestamp){
@@ -57,8 +53,6 @@ function comparableTime(timestamp){
 
     return newTime;
 }
-
-
 
 //hard coded calculations to get data for all attractions, this should really be refactored
 //returns a list of all data for attraction groups
