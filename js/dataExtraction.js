@@ -38,7 +38,7 @@ function extractTimePeriod(dataSet, TimestampStart, TimestampEnd){
     //extract from dataSet each timestamp between startTime and endTime
     extractedData = dataSet.filter( (dataPoint) => {
         //create a comparable date
-        let currentTimestamp = comparableTime(dataPoint.TimeStamp);
+        let currentTimestamp = comparableTime(dataPoint.TimeStamp); //if processed
         //return true if within span
         return (startTime < currentTimestamp && currentTimestamp < endTime);
     })

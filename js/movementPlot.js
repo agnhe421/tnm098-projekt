@@ -16,7 +16,7 @@ var svg = d3.select("#movement")
 let FridayCheckin = "./data/checkin/Friday/FridayCheckIn.csv"; 
 let SaturdayCheckin = "./data/checkin/Saturday/SaturdayCheckIn.csv"; 
 let SundayCheckin = "./data/checkin/Sunday/SundayCheckIn.csv"; 
-
+//let FridayCheckin = "./data/newData/pruned_movement2_friday.csv"; 
 
 
 function movementPlot(data) {
@@ -52,18 +52,17 @@ function checkDensity(data){
   let totalCheckins = 0;
   totalCheckins = data.length;
 
-  //set global variable
+  //set global variable, this is used in calculating the percentage of the rides.
   _totalCheckinsPark = totalCheckins; 
-  
+
   //only runs groupBy, could be refactored out.
   let result = groupBy(data, function(dataPoint)
   {
     return [dataPoint.X, dataPoint.Y];
   });
+  
+  extractTimePeriod(data, data[9].TimeStamp, data[109].TimeStamp);  //if original dataSet
 
-  extractTimePeriod(data, data[9].TimeStamp, data[109].TimeStamp);  
-
-  runStats(result);
   //console.log(result);
   //console.log(attractionList);
   //extractLocation(result, _entrances);
@@ -126,7 +125,7 @@ function updateMovementPlot(data) {
     .append("circle")
     .attr("cx", function (d) { return x(d[0].X); })
     .attr("cy", function (d) { return y(d[0].Y); })
-    .attr("r", function (d)  {return (2.0 + d.length/100) } )
+    .attr("r", function (d)  {return (2.0 + d.length/500) } )
     .style("fill", "#69b3a2")
 
   console.log('finished!')
@@ -142,15 +141,15 @@ function updateMovementPlot(data) {
 function checkPerformance(foo, argument){
     let t0 = performance.now();
     
-    let list = foo(argument);
+    foo(argument);
     
     let t1 = performance.now();
 
     let timeElapsed = (t1-t0).toPrecision(4);
 
-    console.log("Call to function" + " took " + timeElapsed + " milliseconds.");
+    console.log("Call to function took " + timeElapsed + " milliseconds.");
 
-    return list;
+    //return list;
 }
 
 function loadNewDay(day) {

@@ -15,7 +15,6 @@ let attractionList = [];
 //Unless the data set with unique visitors is  read.
 function runStats(dataSet){
     attractionList = extractAllLocations(dataSet);
-    
 }
 
 function calcTotalCheckins(dataSet){
@@ -30,8 +29,10 @@ function calcTotalCheckins(dataSet){
 }
 
 function getUniqueVisitors(data){
-    const uniqueVisitors = [...new Set(data.map(person => person.id))];
- 
+    let uniqueVisitors = [...new Set(data.map(person => {
+        return person.id
+    }))];
+    console.log("Number of visitors " + uniqueVisitors.length);
     return uniqueVisitors;
 }
 
