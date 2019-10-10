@@ -76,6 +76,13 @@ function updateBarPlot(data) {
     .attr("transform", "translate(0," + barHeightAttractions + ")")
     .call(d3.axisBottom(x))
 
+  var tooltip3 = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .text('tooltip')
+
   // Add Y axis
   var y = d3.scaleLinear()
     .domain([0, 7000])
@@ -105,10 +112,21 @@ function updateBarPlot(data) {
     .on("mouseover", function (d) {
       d3.select(this)
         .attr("fill", "orange");
+      tooltip3.html('Day: ' + d.day + '<br>' +  
+                    'Time period: ' + d.group + '<br>' + 
+                    'Visitors: '+ d.value + '<br>' )
+      tooltip3.style('background-color', 'LightSteelBlue')
+        .style('border-radius', '5px')
+        .style('padding', '5px');	
+      
+      return tooltip3.style("visibility", "visible");
     })
+    .on("mousemove", function(){return tooltip3.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
     .on("mouseout", function (d, i) {
       d3.select(this)
       .attr("fill", "#69b3a2");
+      
+      return tooltip3.style("visibility", "hidden");
     })
     .on("click", function (d) {
         console.log('click')

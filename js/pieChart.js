@@ -1,8 +1,8 @@
-var width = 300
-height = 300
-margin = 50
+var width2 = 300
+height2 = 300
+margin2 = 50
 
-var radius = Math.min(width, height) / 2 - margin
+var radius = Math.min(width2, height2) / 2 - margin2
 
 function pieChart(data) {
   updatePieChart(data);
@@ -10,10 +10,10 @@ function pieChart(data) {
 // append the svg object to the div called 'my_dataviz'
 var svg1 = d3.select("#pieChart")
   .append("svg")
-  .attr("width", width)
-  .attr("height", height)
+  .attr("width", width2)
+  .attr("height", height2)
   .append("g")
-  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+  .attr("transform", "translate(" + width2 / 2 + "," + height2 / 2 + ")");
 /*
 // create 2 data_set
 var groupSizesFriday = { alone: 24016, two: 17064, three: 12789, four: 8668, five: 5545, six: 3948, seven: 2933, 
@@ -36,7 +36,7 @@ var arcGenerator = d3.arc()
   .outerRadius(radius * 1.3);
 // A function that create / update the plot for a given variable:
 function updatePieChart(data) {
-  console.log(data);
+  
   let tourGroup = 0;
   // Compute the position of each group on the pie:
   var pie = d3.pie() //d.value.length is the number of groups in the category, d.value[0].length is the group size
@@ -92,6 +92,7 @@ function updatePieChart(data) {
     .on("mouseout", function (d, i) {
       d3.select(this)
       .attr("fill", function (d) {
+        tooltip1.style("visibility", "hidden");
         return(color(d.data.value[0].length))
       });
     })
