@@ -8,6 +8,7 @@
  */
 
  //global variable;
+let uniqueVisitorsInPark = 0;
 let _totalCheckinsPark = 0;
 let attractionList = [];
 
@@ -34,7 +35,7 @@ function getUniqueVisitors(data){
     let uniqueVisitors = [...new Set(data.map(person => {
         return person.id
     }))];
-    console.log("Number of visitors " + uniqueVisitors.length);
+    //console.log("Number of visitors " + uniqueVisitors.length);
     return uniqueVisitors;
 }
 
@@ -51,17 +52,29 @@ function removeExtracted(data, idx){
 }
 
 //will return unique ids from movementData who are not in checkinData, 
-function findWalkers(movementData, checkinData) {
+function findWalkers(allCheckins, entranceExcludedCheck) {
     let walkers = [];
+    let allChecks = [];
+    let entranceExcl = [];
+
+    allCheckins.forEach( array => {
+        allChecks = allChecks.concat(array);
+    })
+
+    entranceExcludedCheck.forEach( array => {
+        entranceExcl = entranceExcl.concat(array);
+    })
 
     //get the unique ids of the movers and the checkers
-    let uniqueMovers = getUniqueVisitors(movementData);
-    let uniqueCheckers = getUniqueVisitors(checkinData);
-
+    let uniqueMovers = getUniqueVisitors(allChecks);
+    let uniqueCheckers = getUniqueVisitors(entranceExcl);
+    
     //the difference is everyone who is in the movement data but has not checked in
-    walkers = movementData.filter(x => !checkinData.includes(x));
+    walkers = uniqueMovers.filter( (x) => {
+        return !uniqueCheckers.includes(x) });
 
-    console.log (walkers);
+    console.log ("People who only walk around the park: ");
+    console.log(walkers);
 }
 /****************************************************************************************
  * 

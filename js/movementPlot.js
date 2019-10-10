@@ -38,6 +38,24 @@ function checkDensity(data) {
   var result = groupBy(data, function (dataPoint) {
     return [dataPoint.X, dataPoint.Y];
   });
+
+  //console.log(result);
+  newData = result[0];
+  newData = newData.concat(result[1], result[2]);
+  
+  //sort by TimeStamp
+  let timeGroup = groupBy(newData, function (dataPoint){
+    let currentTime = comparableTime(dataPoint.TimeStamp);
+    return currentTime;
+  })
+  //sort by size of groups
+  let timeGroupSort = groupBy(timeGroup, function (dataPoint){
+    return dataPoint.length;
+  })
+  
+  //update pieChart
+  pieChart(timeGroupSort);
+
   runStats(result);
   updateMovementPlot(result)
 }

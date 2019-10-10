@@ -82,7 +82,7 @@ function updateBarPlot(data) {
     .range([barHeightAttractions, 0]);
 
   svg2.append("g")
-    .attr("class", "myYaxis")
+    .attr("class", "myYaxis2")
     .call(d3.axisLeft(y));
 
   var bar = svg2.selectAll("rect")

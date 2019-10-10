@@ -19,10 +19,11 @@ function extractLocation(data, locationList){
             }
         }
     }
-    //should we overwrite data and return it? 
-    data = differenceGroup(data, toExtract);
+    let newData = [];
+    //exclude extracted data from group
+    newData = differenceGroup(data, toExtract);
 
-    return toExtract;
+    return [toExtract,newData] ;
 }
 
 //method for extracting all timestamps in a 
@@ -63,8 +64,11 @@ function extractAllLocations(dataSet) {
     let entranceData = [];
     let totalEntranceCheckins = 0;
     let entranceRatio = 0.0;
-    
-    entranceData = extractLocation(dataSet, entrances);
+    let tempData, newData = [];
+
+    tempData = extractLocation(dataSet, entrances);
+    entranceData = tempData[0];
+    newData = tempData[1];
     totalEntranceCheckins = calcTotalCheckins(entranceData);
     entranceRatio = Number((totalEntranceCheckins / _totalCheckinsPark*100).toPrecision(3));   
     
@@ -72,13 +76,16 @@ function extractAllLocations(dataSet) {
                     checkins: totalEntranceCheckins, 
                     ratio: entranceRatio};
     attractionList.push(entrance);
+    findWalkers(dataSet, newData);
     
     //stats from thrill rides
     let thrillData = [];
     let totalThrillCheckins = 0;
     let thrillRatio = 0.0;
     //doCakculations
-    thrillData = extractLocation(dataSet, thrillRides);
+    tempData = extractLocation(newData, thrillRides);
+    thrillData = tempData[0];
+    newData = tempData[1];
     totalThrillCheckins = calcTotalCheckins(thrillData);
     thrillRatio = Number((totalThrillCheckins / _totalCheckinsPark*100).toPrecision(3));   
 
@@ -93,7 +100,10 @@ function extractAllLocations(dataSet) {
     let totalKidCheckins = 0;
     let kidRatio = 0.0;
     //do calculations 
-    kidData = extractLocation(dataSet, kiddieRides);
+    tempData = extractLocation(newData, kiddieRides);
+    kidData = tempData[0];
+    newData = tempData[1];
+    //kidData = extractLocation(dataSet, kiddieRides);
     totalKidCheckins = calcTotalCheckins(kidData);  
     kidRatio = Number((totalKidCheckins / _totalCheckinsPark*100).toPrecision(3));   
 
@@ -108,7 +118,10 @@ function extractAllLocations(dataSet) {
     let totalGeneralCheckins = 0;
     let generalRatio = 0.0;
     //do calc
-    generalData = extractLocation(dataSet, ridesForEveryone);
+    tempData = extractLocation(newData, ridesForEveryone);
+    generalData = tempData[0];
+    newData = tempData[1];
+    //generalData = extractLocation(dataSet, ridesForEveryone);
     totalGeneralCheckins = calcTotalCheckins(generalData); 
     generalRatio = Number((totalGeneralCheckins / _totalCheckinsPark*100).toPrecision(3));   
     //create object
@@ -123,7 +136,11 @@ function extractAllLocations(dataSet) {
     let totalMedicCheckins = 0;
     let medicRatio = 0.0;
     //do calc
-    medicData = extractLocation(dataSet, medic);
+
+    tempData = extractLocation(newData, medic);
+    medicData = tempData[0];
+    newData = tempData[1];
+    //medicData = extractLocation(dataSet, medic);
     totalMedicCheckins = calcTotalCheckins(medicData);    
     medicRatio = Number((totalMedicCheckins / _totalCheckinsPark*100).toPrecision(3));
     //create obj
@@ -137,7 +154,11 @@ function extractAllLocations(dataSet) {
     let pavillionData = [];
     let totalPavillionCheckins = 0;
     let pavillionRatio = 0.0;
-    pavillionData = extractLocation(dataSet, pavillion);
+
+    tempData = extractLocation(newData, pavillion);
+    pavillionData = tempData[0];
+    newData = tempData[1];
+    //pavillionData = extractLocation(dataSet, pavillion);
     totalPavillionCheckins = calcTotalCheckins(pavillionData);
     pavillionRatio = Number((totalPavillionCheckins / _totalCheckinsPark*100).toPrecision(3));
 
@@ -146,12 +167,19 @@ function extractAllLocations(dataSet) {
                           ratio: pavillionRatio};
 
     attractionList.push(pavillionPlace);
+    
+    let totalOtherCheckins = [];
+    newData.forEach( (array) => {
+        totalOtherCheckins = totalOtherCheckins.concat(array);
+    })
 
+    let notInterestingRatio = Number((totalOtherCheckins.length / _totalCheckinsPark*100).toPrecision(3));
     let notSoInteresting = {name: "Other",
-                            checkins: 0,
-                            ratio: 0.0}
+                            checkins: totalOtherCheckins.length,
+                            ratio: notInterestingRatio}
+    
     attractionList.push(notSoInteresting);
-
+    
     return attractionList;
 }
 
